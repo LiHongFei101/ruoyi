@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.project.employee.mapper.EducationInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.ruoyi.project.employee.domain.EducationInfo" >
+    <id column="edu_id" property="eduId" jdbcType="VARCHAR" />
+    <result column="emp_id" property="empId" jdbcType="VARCHAR" />
+    <result column="edu_school" property="eduSchool" jdbcType="VARCHAR" />
+    <result column="edu_begin" property="eduBegin" jdbcType="VARCHAR" />
+    <result column="edu_graduation" property="eduGraduation" jdbcType="VARCHAR" />
+    <result column="isdisploma" property="isdisploma" jdbcType="VARCHAR" />
+    <result column="isdegree" property="isdegree" jdbcType="VARCHAR" />
+    <result column="emp_edu" property="empEdu" jdbcType="VARCHAR" />
+    <result column="document_id" property="documentId" jdbcType="VARCHAR" />
+    <result column="isLearnWeb" property="isLearnWeb" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    edu_id, emp_id, edu_school, edu_begin,edu_graduation, isdisploma, isdegree, emp_edu, document_id, isLearnWeb, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from education_info
+    where edu_id = #{eduId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByEmp" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from education_info
+    where emp_id = #{empId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectBySchool" resultMap="BaseResultMap" parameterType="com.ruoyi.project.employee.domain.EducationInfo" >
+    select
+    <include refid="Base_Column_List" />
+    from education_info
+    where emp_id = #{empId,jdbcType=VARCHAR} AND edu_school = #{eduSchool,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from education_info
+    where edu_id = #{eduId,jdbcType=VARCHAR}
+  </delete>
+
+  <delete id="deleteByIds" parameterType="java.lang.String" >
+    delete from education_info
+    where edu_id IN
+    <foreach collection="array" item="eduId" open="(" separator="," close=")">
+      #{eduId}
+    </foreach>
+  </delete>
+
+  <insert id="insert" parameterType="com.ruoyi.project.employee.domain.EducationInfo" >
+    insert into education_info (edu_id, emp_id, edu_school,
+      edu_begin, edu_graduation, isdisploma, isdegree,
+      emp_edu, document_id, isLearnWeb,update_time)
+    values (#{eduId,jdbcType=VARCHAR}, #{empId,jdbcType=VARCHAR}, #{eduSchool,jdbcType=VARCHAR},
+      #{eduBegin,jdbcType=VARCHAR}, #{eduGraduation,jdbcType=VARCHAR}, #{isdisploma,jdbcType=VARCHAR}, #{isdegree,jdbcType=VARCHAR},
+      #{empEdu,jdbcType=VARCHAR}, #{documentId,jdbcType=VARCHAR}, #{isLearnWeb,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ruoyi.project.employee.domain.EducationInfo" >
+    insert into education_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="eduId != null" >
+        edu_id,
+      </if>
+      <if test="empId != null" >
+        emp_id,
+      </if>
+      <if test="eduSchool != null" >
+        edu_school,
+      </if>
+      <if test="eduBegin != null" >
+        edu_begin,
+      </if>
+      <if test="eduGraduation != null" >
+        edu_graduation,
+      </if>
+      <if test="isdisploma != null" >
+        isdisploma,
+      </if>
+      <if test="isdegree != null" >
+        isdegree,
+      </if>
+      <if test="empEdu != null" >
+        emp_edu,
+      </if>
+      <if test="documentId != null" >
+        document_id,
+      </if>
+      <if test="isLearnWeb != null" >
+        isLearnWeb,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="eduId != null" >
+        #{eduId,jdbcType=VARCHAR},
+      </if>
+      <if test="empId != null" >
+        #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="eduSchool != null" >
+        #{eduSchool,jdbcType=VARCHAR},
+      </if>
+      <if test="eduBegin != null" >
+        #{eduBegin,jdbcType=VARCHAR},
+      </if>
+      <if test="eduGraduation != null" >
+        #{eduGraduation,jdbcType=VARCHAR},
+      </if>
+      <if test="isdisploma != null" >
+        #{isdisploma,jdbcType=VARCHAR},
+      </if>
+      <if test="isdegree != null" >
+        #{isdegree,jdbcType=VARCHAR},
+      </if>
+      <if test="empEdu != null" >
+        #{empEdu,jdbcType=VARCHAR},
+      </if>
+      <if test="documentId != null" >
+        #{documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="isLearnWeb != null" >
+        #{isLearnWeb,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.project.employee.domain.EducationInfo" >
+    update education_info
+    <set >
+      <if test="empId != null" >
+        emp_id = #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="eduSchool != null" >
+        edu_school = #{eduSchool,jdbcType=VARCHAR},
+      </if>
+      <if test="eduBegin != null" >
+        edu_begin = #{eduBegin,jdbcType=VARCHAR},
+      </if>
+      <if test="eduGraduation != null" >
+        edu_graduation = #{eduGraduation,jdbcType=VARCHAR},
+      </if>
+      <if test="isdisploma != null" >
+        isdisploma = #{isdisploma,jdbcType=VARCHAR},
+      </if>
+      <if test="isdegree != null" >
+        isdegree = #{isdegree,jdbcType=VARCHAR},
+      </if>
+      <if test="empEdu != null" >
+        emp_edu = #{empEdu,jdbcType=VARCHAR},
+      </if>
+      <if test="documentId != null" >
+        document_id = #{documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="isLearnWeb != null" >
+        isLearnWeb = #{isLearnWeb,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where edu_id = #{eduId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.project.employee.domain.EducationInfo" >
+    update education_info
+    set emp_id = #{empId,jdbcType=VARCHAR},
+      edu_school = #{eduSchool,jdbcType=VARCHAR},
+      edu_begin = #{eduBegin,jdbcType=VARCHAR},
+      edu_graduation = #{eduGraduation,jdbcType=VARCHAR},
+      isdisploma = #{isdisploma,jdbcType=VARCHAR},
+      isdegree = #{isdegree,jdbcType=VARCHAR},
+      emp_edu = #{empEdu,jdbcType=VARCHAR},
+      document_id = #{documentId,jdbcType=VARCHAR},
+      isLearnWeb = #{isLearnWeb,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where edu_id = #{eduId,jdbcType=VARCHAR}
+  </update>
+</mapper>

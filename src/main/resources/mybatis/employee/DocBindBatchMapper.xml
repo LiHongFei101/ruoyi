@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.project.employee.mapper.DocBindBatchMapper" >
+  <resultMap id="BaseResultMap" type="com.ruoyi.project.employee.domain.DocBindBatch" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="zipName" property="zipname" jdbcType="VARCHAR" />
+    <result column="zipSize" property="zipsize" jdbcType="DECIMAL" />
+    <result column="empId" property="empid" jdbcType="VARCHAR" />
+    <result column="docType" property="doctype" jdbcType="VARCHAR" />
+    <result column="docSize" property="docsize" jdbcType="DECIMAL" />
+    <result column="itemId" property="itemId" jdbcType="VARCHAR" />
+    <result column="itemName" property="itemName" jdbcType="VARCHAR" />
+    <result column="docName" property="docname" jdbcType="VARCHAR" />
+    <result column="isSuccess" property="issuccess" jdbcType="VARCHAR" />
+    <result column="msg" property="msg" jdbcType="VARCHAR" />
+    <result column="bindDate" property="bindDate" jdbcType="VARCHAR" />
+    <result column="updateTime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="userId" property="userid" jdbcType="VARCHAR" />
+    <result column="empInfo" property="empInfo" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, zipName, zipSize, empId, docType, docSize, itemId, itemName, docName, isSuccess, msg, bindDate,
+    updateTime, userId
+  </sql>
+
+  <sql id="Base_Column_List_Empinfo" >
+    id, zipName, zipSize, empId, docType, docSize, itemId, itemName, docName, isSuccess, msg, bindDate,
+    updateTime, userId,
+    (CONCAT((SELECT e.emp_name FROM employee_info e WHERE e.emp_id = empId),' ',
+    (SELECT e.id_card FROM employee_info e WHERE e.emp_id = empId))) AS empInfo
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from emp_docbind_batch
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByWhere" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List_Empinfo" />
+    from emp_docbind_batch
+    <where>
+      <if test="zipname != null and zipname !=''" >
+        AND zipName LIKE concat('%', #{zipname,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="bindDate != null and bindDate != ''" >
+        AND bindDate = #{bindDate,jdbcType=VARCHAR}
+      </if>
+      <if test="empid != null and empid != ''">
+        AND empId = #{empid,jdbcType=VARCHAR}
+      </if>
+      <if test="zipname == null and bindDate == null and empid == null">
+        AND zipName = (SELECT DISTINCT(zipName) FROM emp_docbind_batch
+        WHERE updateTime = (SELECT MAX(updateTime) FROM emp_docbind_batch))
+      </if>
+    </where>
+    ORDER BY empId, docType, itemName, bindDate DESC
+  </select>
+
+  <select id="selectAllZip" resultType="string">
+    SELECT zipName FROM emp_docbind_batch
+    GROUP BY zipName
+    /*ORDER BY bindDate DESC*/
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from emp_docbind_batch
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.ruoyi.project.employee.domain.DocBindBatch" >
+    insert into emp_docbind_batch (id, zipName, zipSize, 
+      empId, docType, docSize, 
+      itemId, itemName, docName, isSuccess,
+      msg, bindDate,updateTime, userId
+      )
+    values (#{id,jdbcType=VARCHAR}, #{zipname,jdbcType=VARCHAR}, #{zipsize,jdbcType=DECIMAL},
+      #{empid,jdbcType=VARCHAR}, #{doctype,jdbcType=VARCHAR}, #{docsize,jdbcType=DECIMAL},
+      #{itemId,jdbcType=VARCHAR}, #{itemName, jdbcType=VARCHAR}, #{docname,jdbcType=VARCHAR}, #{issuccess,jdbcType=VARCHAR},
+      #{msg,jdbcType=VARCHAR},#{bindDate, jdbcType=VARCHAR}, #{updatetime,jdbcType=TIMESTAMP}, #{userid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ruoyi.project.employee.domain.DocBindBatch" >
+    insert into emp_docbind_batch
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="zipname != null" >
+        zipName,
+      </if>
+      <if test="zipsize != null" >
+        zipSize,
+      </if>
+      <if test="empid != null" >
+        empId,
+      </if>
+      <if test="doctype != null" >
+        docType,
+      </if>
+      <if test="docsize != null" >
+        docSize,
+      </if>
+      <if test="itemId != null" >
+        itemId,
+      </if>
+      <if test="itemName != null" >
+        itemName,
+      </if>
+      <if test="docname != null" >
+        docName,
+      </if>
+      <if test="issuccess != null" >
+        isSuccess,
+      </if>
+      <if test="msg != null" >
+        msg,
+      </if>
+      <if test="bindDate != null" >
+        bindDate,
+      </if>
+      <if test="updatetime != null" >
+        updateTime,
+      </if>
+      <if test="userid != null" >
+        userId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="zipname != null" >
+        #{zipname,jdbcType=VARCHAR},
+      </if>
+      <if test="zipsize != null" >
+        #{zipsize,jdbcType=DECIMAL},
+      </if>
+      <if test="empid != null" >
+        #{empid,jdbcType=VARCHAR},
+      </if>
+      <if test="doctype != null" >
+        #{doctype,jdbcType=VARCHAR},
+      </if>
+      <if test="docsize != null" >
+        #{docsize,jdbcType=DECIMAL},
+      </if>
+      <if test="itemId != null" >
+        #{itemId,jdbcType=VARCHAR},
+      </if>
+      <if test="itemName != null" >
+        #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="docname != null" >
+        #{docname,jdbcType=VARCHAR},
+      </if>
+      <if test="issuccess != null" >
+        #{issuccess,jdbcType=VARCHAR},
+      </if>
+      <if test="msg != null" >
+        #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="bindDate != null" >
+        #{bindDate,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.project.employee.domain.DocBindBatch" >
+    update emp_docbind_batch
+    <set >
+      <if test="zipname != null" >
+        zipName = #{zipname,jdbcType=VARCHAR},
+      </if>
+      <if test="zipsize != null" >
+        zipSize = #{zipsize,jdbcType=DECIMAL},
+      </if>
+      <if test="empid != null" >
+        empId = #{empid,jdbcType=VARCHAR},
+      </if>
+      <if test="doctype != null" >
+        docType = #{doctype,jdbcType=VARCHAR},
+      </if>
+      <if test="docsize != null" >
+        docSize = #{docsize,jdbcType=DECIMAL},
+      </if>
+      <if test="itemId != null" >
+        itemId = #{itemId,jdbcType=VARCHAR},
+      </if>
+      <if test="itemName != null" >
+        itemId = #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="docname != null" >
+        docName = #{docname,jdbcType=VARCHAR},
+      </if>
+      <if test="issuccess != null" >
+        isSuccess = #{issuccess,jdbcType=VARCHAR},
+      </if>
+      <if test="msg != null" >
+        msg = #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="bindDate != null" >
+        bindDate = #{bindDate,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userid != null" >
+        userId = #{userid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.project.employee.domain.DocBindBatch" >
+    update emp_docbind_batch
+    set zipName = #{zipname,jdbcType=VARCHAR},
+      zipSize = #{zipsize,jdbcType=DECIMAL},
+      empId = #{empid,jdbcType=VARCHAR},
+      docType = #{doctype,jdbcType=VARCHAR},
+      docSize = #{docsize,jdbcType=DECIMAL},
+      itemId = #{itemId,jdbcType=VARCHAR},
+      itemName = #{itemName,jdbcType=VARCHAR},
+      docName = #{docname,jdbcType=VARCHAR},
+      isSuccess = #{issuccess,jdbcType=VARCHAR},
+      msg = #{msg,jdbcType=VARCHAR},
+      bindDate = #{bindDate,jdbcType=VARCHAR},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      userId = #{userid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

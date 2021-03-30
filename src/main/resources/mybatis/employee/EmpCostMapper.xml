@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.project.employee.mapper.EmpCostMapper" >
+  <resultMap id="BaseResultMap" type="com.ruoyi.project.employee.domain.EmpCost" >
+    <id column="cost_id" property="costId" jdbcType="BIGINT" />
+    <result column="emp_id" property="empId" jdbcType="VARCHAR" />
+    <result column="emp_salary" property="empSalary" jdbcType="DECIMAL" />
+    <result column="emp_insurance" property="empInsurance" jdbcType="DECIMAL" />
+    <result column="emp_fund" property="empFund" jdbcType="DECIMAL" />
+    <result column="subsidies_1" property="subsidies1" jdbcType="DECIMAL" />
+    <result column="subsidies_2" property="subsidies2" jdbcType="DECIMAL" />
+    <result column="subsidies_3" property="subsidies3" jdbcType="DECIMAL" />
+    <result column="subsidies_4" property="subsidies4" jdbcType="DECIMAL" />
+    <result column="subsidies_5" property="subsidies5" jdbcType="DECIMAL" />
+    <result column="update_Time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <resultMap id="EmpCostResultMap" type="com.ruoyi.project.employee.domain.EmpCost" >
+    <id column="cost_id" property="costId" jdbcType="BIGINT" />
+    <result column="emp_id" property="empId" jdbcType="VARCHAR" />
+    <result column="emp_salary" property="empSalary" jdbcType="DECIMAL" />
+    <result column="emp_insurance" property="empInsurance" jdbcType="DECIMAL" />
+    <result column="emp_fund" property="empFund" jdbcType="DECIMAL" />
+    <result column="subsidies_1" property="subsidies1" jdbcType="DECIMAL" />
+    <result column="subsidies_2" property="subsidies2" jdbcType="DECIMAL" />
+    <result column="subsidies_3" property="subsidies3" jdbcType="DECIMAL" />
+    <result column="subsidies_4" property="subsidies4" jdbcType="DECIMAL" />
+    <result column="subsidies_5" property="subsidies5" jdbcType="DECIMAL" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <association property="employeeInfo" column="empId" javaType="com.ruoyi.project.employee.domain.EmployeeInfo" resultMap="empResultMap" />
+  </resultMap>
+  <resultMap id="empResultMap" type="com.ruoyi.project.employee.domain.EmployeeInfo" >
+    <id column="emp_id" property="empId" jdbcType="VARCHAR" />
+    <result column="emp_name" property="empName" jdbcType="VARCHAR" />
+    <result column="id_card" property="idCard" jdbcType="VARCHAR" />
+    <result column="emp_department" property="empDepartment" jdbcType="VARCHAR" />
+    <result column="emp_job" property="empJob" jdbcType="VARCHAR" />
+    <result column="emp_level" property="empLevel" jdbcType="VARCHAR" />
+    <result column="emp_edu" property="empEdu" jdbcType="VARCHAR" />
+  </resultMap>
+
+
+
+  <sql id="Base_Column_List" >
+    cost_id, emp_id, emp_salary, emp_insurance, emp_fund, subsidies_1, subsidies_2, subsidies_3,
+    subsidies_4, subsidies_5, update_time
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from emp_cost
+    where cost_id = #{costId,jdbcType=BIGINT}
+  </select>
+
+
+  <select id="selectByEmp" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from emp_cost
+    where emp_id = #{empId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectHistoryByEmp" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from emp_cost_history
+    where emp_id = #{empId,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from emp_cost
+    where cost_id = #{costId,jdbcType=BIGINT}
+  </delete>
+
+  <delete id="deleteByEmp" parameterType="java.lang.String" >
+    delete from emp_cost
+    where emp_id = #{empId,jdbcType=VARCHAR}
+  </delete>
+
+  <delete id="deleteHistoryById" parameterType="java.lang.String" >
+    delete from emp_cost_history
+    where cost_id = #{costId,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.ruoyi.project.employee.domain.EmpCost" useGeneratedKeys="true" keyProperty="costId">
+    insert into emp_cost (cost_id, emp_id, emp_salary,
+      emp_insurance, emp_fund, subsidies_1, 
+      subsidies_2, subsidies_3, subsidies_4, 
+      subsidies_5, update_time)
+    values (#{costId,jdbcType=BIGINT}, #{empId,jdbcType=VARCHAR}, #{empSalary,jdbcType=DECIMAL},
+      #{empInsurance,jdbcType=DECIMAL}, #{empFund,jdbcType=DECIMAL}, #{subsidies1,jdbcType=DECIMAL}, 
+      #{subsidies2,jdbcType=DECIMAL}, #{subsidies3,jdbcType=DECIMAL}, #{subsidies4,jdbcType=DECIMAL}, 
+      #{subsidies5,jdbcType=DECIMAL}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <insert id="insertHistory" parameterType="com.ruoyi.project.employee.domain.EmpCost" useGeneratedKeys="true" keyProperty="costId">
+    insert into emp_cost_history (emp_id, emp_salary,
+    emp_insurance, emp_fund, subsidies_1,
+    subsidies_2, subsidies_3, subsidies_4,
+    subsidies_5, update_time)
+    values (#{empId,jdbcType=VARCHAR}, #{empSalary,jdbcType=DECIMAL},
+    #{empInsurance,jdbcType=DECIMAL}, #{empFund,jdbcType=DECIMAL}, #{subsidies1,jdbcType=DECIMAL},
+    #{subsidies2,jdbcType=DECIMAL}, #{subsidies3,jdbcType=DECIMAL}, #{subsidies4,jdbcType=DECIMAL},
+    #{subsidies5,jdbcType=DECIMAL}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.ruoyi.project.employee.domain.EmpCost" useGeneratedKeys="true" keyProperty="costId">
+    insert into emp_cost
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="costId != null" >
+        cost_id,
+      </if>
+      <if test="empId != null" >
+        emp_id,
+      </if>
+      <if test="empSalary != null" >
+        emp_salary,
+      </if>
+      <if test="empInsurance != null" >
+        emp_insurance,
+      </if>
+      <if test="empFund != null" >
+        emp_fund,
+      </if>
+      <if test="subsidies1 != null" >
+        subsidies_1,
+      </if>
+      <if test="subsidies2 != null" >
+        subsidies_2,
+      </if>
+      <if test="subsidies3 != null" >
+        subsidies_3,
+      </if>
+      <if test="subsidies4 != null" >
+        subsidies_4,
+      </if>
+      <if test="subsidies5 != null" >
+        subsidies_5,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="costId != null" >
+        #{costId,jdbcType=BIGINT},
+      </if>
+      <if test="empId != null" >
+        #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="empSalary != null" >
+        #{empSalary,jdbcType=DECIMAL},
+      </if>
+      <if test="empInsurance != null" >
+        #{empInsurance,jdbcType=DECIMAL},
+      </if>
+      <if test="empFund != null" >
+        #{empFund,jdbcType=DECIMAL},
+      </if>
+      <if test="subsidies1 != null" >
+        #{subsidies1,jdbcType=DECIMAL},
+      </if>
+      <if test="subsidies2 != null" >
+        #{subsidies2,jdbcType=DECIMAL},
+      </if>
+      <if test="subsidies3 != null" >
+        #{subsidies3,jdbcType=DECIMAL},
+      </if>
+      <if test="subsidies4 != null" >
+        #{subsidies4,jdbcType=DECIMAL},
+      </if>
+      <if test="subsidies5 != null" >
+        #{subsidies5,jdbcType=DECIMAL},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.project.employee.domain.EmpCost" >
+    update emp_cost
+    <set >
+      <if test="empId != null" >
+        emp_id = #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="empSalary != null" >
+        emp_salary = #{empSalary,jdbcType=DECIMAL},
+      </if>
+      <if test="empInsurance != null" >
+        emp_insurance = #{empInsurance,jdbcType=DECIMAL},
+      </if>
+      <if test="empFund != null" >
+        emp_fund = #{empFund,jdbcType=DECIMAL},
+      </if>
+      <if test="subsidies1 != null" >
+        subsidies_1 = #{subsidies1,jdbcType=DECIMAL},
+      </if>
+      <if test="subsidies2 != null" >
+        subsidies_2 = #{subsidies2,jdbcType=DECIMAL},
+      </if>
+      <if test="subsidies3 != null" >
+        subsidies_3 = #{subsidies3,jdbcType=DECIMAL},
+      </if>
+      <if test="subsidies4 != null" >
+        subsidies_4 = #{subsidies4,jdbcType=DECIMAL},
+      </if>
+      <if test="subsidies5 != null" >
+        subsidies_5 = #{subsidies5,jdbcType=DECIMAL},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where cost_id = #{costId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.project.employee.domain.EmpCost" >
+    update emp_cost
+    set emp_id = #{empId,jdbcType=VARCHAR},
+      emp_salary = #{empSalary,jdbcType=DECIMAL},
+      emp_insurance = #{empInsurance,jdbcType=DECIMAL},
+      emp_fund = #{empFund,jdbcType=DECIMAL},
+      subsidies_1 = #{subsidies1,jdbcType=DECIMAL},
+      subsidies_2 = #{subsidies2,jdbcType=DECIMAL},
+      subsidies_3 = #{subsidies3,jdbcType=DECIMAL},
+      subsidies_4 = #{subsidies4,jdbcType=DECIMAL},
+      subsidies_5 = #{subsidies5,jdbcType=DECIMAL},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where cost_id = #{costId,jdbcType=BIGINT}
+  </update>
+
+
+
+</mapper>

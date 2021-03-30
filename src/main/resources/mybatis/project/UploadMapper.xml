@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.project.mapper.UploadMapper">
+
+    <resultMap type="fileInfo" id="FileInfoResult">
+        <id     property="id"          column="id"          />
+        <result property="item_id"        column="item_id"        />
+        <result property="filename"       column="filename"       />
+        <result property="uuidname"   column="uuidname"   />
+        <result property="length" column="length" />
+        <result property="remark"  column="remark"  />
+    </resultMap>
+
+    <select id="selectFileList" parameterType="fileInfo" resultMap="FileInfoResult">
+        select * from tool_file where
+        <if test="item_id != null and item_id != ''">item_id=#{item_id} </if>
+        <if test="id != null and id != ''">id=#{id} </if>
+
+    </select>
+
+    <delete id="deleteFileByIds" parameterType="fileInfo">
+        delete from tool_file where id = #{id}
+    </delete>
+
+    <insert id="uploadFile" parameterType="fileInfo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tool_file (`id`,  `filename`,  `uuidname`,  `length`,  `remark`,  `item_id`)
+        VALUES (#{id}, #{filename}, #{uuidname}, #{length}, #{remark}, #{item_id});
+    </insert>
+
+
+
+
+
+
+
+</mapper> 

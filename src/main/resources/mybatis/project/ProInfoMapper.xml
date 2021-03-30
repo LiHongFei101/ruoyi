@@ -1,0 +1,596 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.project.mapper.ProInfoMapper">
+
+    <resultMap type="Item" id="ItemResult">
+        <id     property="item_id"          column="item_id"          />
+        <result property="dept_id"        column="dept_id"        />
+        <result property="item_name"       column="item_name"       />
+        <result property="item_numbering"       column="item_numbering"       />
+        <result property="empId"   column="emp_id"   />
+        <result property="idCard"   column="id_card"   />
+        <result property="item_leadertel" column="item_leadertel" />
+        <!--<result property="item_level"  column="item_level"  />-->
+        <result property="item_type"     column="item_type"      />
+        <result property="item_phase"         column="item_phase"          />
+        <result property="item_num"       column="item_num"       />
+        <result property="item_startdate"     column="item_startdate"     />
+        <result property="item_enddate"       column="item_enddate"       />
+        <result property="item_fund"     column="item_fund"     />
+        <result property="workcost"     column="workcost"     />
+        <result property="taxrate"     column="taxrate"     />
+        <result property="item_cycle"         column="item_cycle"          />
+        <result property="customer_id"         column="customer_id"          />
+       <!-- <result property="item_adress"         column="item_adress"          />-->
+        <result property="ischange"         column="ischange"          />
+        <result property="change_num"         column="change_num"          />
+        <result property="update_time"         column="update_time"          />
+        <result property="remark"         column="remark"          />
+        <association property="dept"    column="dept_id" javaType="SysDept" resultMap="deptResult" />
+        <collection  property="roles"   javaType="java.util.List"        resultMap="RoleResult" />
+    </resultMap>
+        <resultMap id="deptResult" type="SysDept">
+            <id     property="deptId"   column="dept_id"     />
+            <result property="parentId" column="parent_id"   />
+            <result property="deptName" column="dept_name"   />
+            <result property="orderNum" column="order_num"   />
+            <result property="leader"   column="leader"      />
+            <result property="status"   column="dept_status" />
+        </resultMap>
+        <resultMap id="RoleResult" type="SysRole">
+            <id     property="roleId"       column="role_id"        />
+            <result property="roleName"     column="role_name"      />
+            <result property="roleKey"      column="role_key"       />
+            <result property="roleSort"     column="role_sort"      />
+            <result property="dataScope"     column="data_scope"    />
+            <result property="status"       column="role_status"    />
+        </resultMap>
+    <!-- 员工信息-->
+    <resultMap id="BaseResultMap" type="com.ruoyi.project.employee.domain.EmployeeInfo" >
+        <id column="emp_id" property="empId" jdbcType="VARCHAR" />
+        <result column="emp_name" property="empName" jdbcType="VARCHAR" />
+        <result column="emp_sex" property="empSex" jdbcType="CHAR" />
+        <result column="id_card" property="idCard" jdbcType="VARCHAR" />
+        <result column="emp_department" property="empDepartment" jdbcType="VARCHAR" />
+        <!--<result column="emp_secdepartment" property="empSecdepartment" jdbcType="VARCHAR" />-->
+        <result column="emp_job" property="empJob" jdbcType="VARCHAR" />
+        <result column="emp_level" property="empLevel" jdbcType="VARCHAR" />
+        <result column="emp_tel" property="empTel" jdbcType="VARCHAR" />
+        <result column="emp_age" property="empAge" jdbcType="INTEGER" />
+        <result column="emp_edu" property="empEdu" jdbcType="VARCHAR" />
+        <result column="emp_email" property="empEmail" jdbcType="VARCHAR" />
+        <result column="emp_adress" property="empAdress" jdbcType="VARCHAR" />
+        <result column="emp_famadress" property="empFamadress" jdbcType="VARCHAR" />
+        <result column="emp_emecontact" property="empEmecontact" jdbcType="VARCHAR" />
+        <result column="emp_emecontacttel" property="empEmecontacttel" jdbcType="VARCHAR" />
+        <result column="emp_workdate" property="empWorkdate" jdbcType="VARCHAR" />
+        <result column="emp_state" property="empState" jdbcType="VARCHAR" />
+        <result column="emp_entrydate" property="empEntrydate" jdbcType="VARCHAR" />
+        <result column="emp_separdate" property="empSepardate" jdbcType="VARCHAR" />
+        <result column="emp_quitdate" property="empQuitdate" jdbcType="VARCHAR" />
+        <result column="major" property="major" jdbcType="VARCHAR" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="emp_no" property="empNo" jdbcType="VARCHAR" />
+        <association property="dept"    column="dept_id" javaType="SysDept" resultMap="deptResult" />
+        <association property="post"    column="post_id" javaType="SysPost" resultMap="SysPostResult" />
+        <association property="cost"    column="cost_id" javaType="EmpCost" resultMap="CostResultMap" />
+        <association property="binding"    column="pp_id" javaType="Itemper" resultMap="ItemperResultMap" />
+        <association property="level"    column="item_level_id" javaType="Itemperlevel" resultMap="ItemperlevelResultMap" />
+    </resultMap>
+    <resultMap type="SysPost" id="SysPostResult">
+        <id     property="postId"        column="post_id"       />
+        <result property="postCode"      column="post_code"     />
+        <result property="postName"      column="post_name"     />
+        <result property="postSort"      column="post_sort"     />
+        <result property="status"        column="status"        />
+        <result property="createBy"      column="create_by"     />
+        <result property="createTime"    column="create_time"   />
+        <result property="updateBy"      column="update_by"     />
+        <result property="updateTime"    column="update_time"   />
+        <result property="remark"        column="remark"        />
+    </resultMap>
+    <resultMap id="DocResultMap" type="com.ruoyi.project.employee.domain.EmpDocument" >
+        <id column="doc_id" property="docId" jdbcType="VARCHAR" />
+        <result column="emp_id" property="empId" jdbcType="VARCHAR" />
+        <result column="doc_name" property="docName" jdbcType="VARCHAR" />
+        <result column="doc_size" property="docSize" jdbcType="DOUBLE" />
+        <result column="doc_path" property="docPath" jdbcType="VARCHAR" />
+        <result column="doc_type" property="docType" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="CostResultMap" type="com.ruoyi.project.employee.domain.EmpCost" >
+        <id column="cost_id" property="costId" jdbcType="BIGINT" />
+        <result column="emp_id" property="empId" jdbcType="VARCHAR" />
+        <result column="emp_salary" property="empSalary" jdbcType="DECIMAL" />
+        <result column="emp_insurance" property="empInsurance" jdbcType="DECIMAL" />
+        <result column="emp_fund" property="empFund" jdbcType="DECIMAL" />
+        <result column="subsidies_1" property="subsidies1" jdbcType="DECIMAL" />
+        <result column="subsidies_2" property="subsidies2" jdbcType="DECIMAL" />
+        <result column="subsidies_3" property="subsidies3" jdbcType="DECIMAL" />
+        <result column="subsidies_4" property="subsidies4" jdbcType="DECIMAL" />
+        <result column="subsidies_5" property="subsidies5" jdbcType="DECIMAL" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="ItemperResultMap" type="com.ruoyi.project.project.domain.Itemper" >
+        <id column="pp_id" property="ppid"  />
+        <result column="emp_id" property="empid"  />
+        <result column="item_id" property="itemid"  />
+        <result column="item_level_id" property="item_level_id"  />
+        <result column="emp_type" property="emptype"  />
+        <result column="del_flag" property="delflag"  />
+        <result column="startdate" property="startdate"  />
+        <result column="enddate" property="enddate"  />
+        <result column="update_time" property="updatetime"  />
+        <association property="level"    column="item_level_id" javaType="Itemperlevel" resultMap="ItemperlevelResultMap" />
+    </resultMap>
+    <resultMap id="ItemperlevelResultMap" type="com.ruoyi.project.project.domain.Itemperlevel" >
+        <id column="item_level_id" property="item_level_id"  />
+        <result column="item_id" property="item_id"  />
+        <result column="customer_id" property="customer_id"  />
+        <result column="level_name" property="level_name"  />
+        <result column="level_num" property="level_num"  />
+        <result column="level_price" property="level_price"  />
+        <result column="del_flag" property="del_flag"  />
+        <result column="update_time" property="update_time"  />
+    </resultMap>
+    <resultMap id="LevelChangeInfoResultMap" type="com.ruoyi.project.project.domain.LevelChangeInfo" >
+        <id column="lc_id" property="lc_id"  />
+        <result column="emp_id" property="emp_id"  />
+        <result column="item_id" property="item_id"  />
+        <result column="item_level_id" property="item_level_id"  />
+        <result column="empName" property="empName"  />
+        <result column="itemName" property="itemName"  />
+        <result column="level_name" property="level_name"  />
+        <result column="emp_edu" property="emp_edu"  />
+        <result column="edu_graduation" property="edu_graduation"  />
+        <result column="lcstatus" property="lcstatus"  />
+        <result column="createdate" property="createdate"  />
+        <result column="del_flag" property="del_flag"  />
+        <result column="message" property="message"  />
+        <result column="update_time" property="update_time"  />
+    </resultMap>
+
+	<sql id="selectJobVo">
+        select job_id, job_name, job_group, invoke_target, cron_expression, misfire_policy, concurrent, status, create_by, create_time, remark 
+		from sys_job
+    </sql>
+
+    <select id="selectProjectList" parameterType="Item" resultMap="ItemResult">
+       select p.item_id, p.dept_id,d.dept_name, p.item_name,p.item_numbering, (select emp_name from employee_info WHERE emp_id = p.emp_id) as emp_id,
+        p.item_leadertel, p.item_type, p.item_phase, p.item_num,p.item_startdate,
+        p.item_enddate, p.item_fund, p.item_cycle,(SELECT customer_name FROM customer_info WHERE customer_id = p.customer_id ) AS customer_id,
+        p.ischange,p.change_num, p.remark ,p.update_time, d.leader from project_info p
+        left join sys_dept d on p.dept_id = d.dept_id
+        <where>
+         <if test="item_name != null and item_name != ''">
+            p.item_name like concat('%', #{item_name}, '%')
+        </if>
+        <if test="item_numbering != null and item_numbering != ''">
+            AND p.item_numbering like concat('%', #{item_numbering}, '%')
+        </if>
+        <if test="item_type != null and item_type != ''">
+            AND p.item_type =#{item_type}
+        </if>
+        <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+            AND date_format(p.item_startdate,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+            AND date_format(p.item_startdate,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+        </if>
+        <if test="dept_id != null and dept_id != 0">
+            AND (p.dept_id = #{dept_id} OR d.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE FIND_IN_SET (#{dept_id},ancestors) ))
+        </if>
+            <!-- 数据范围过滤 -->
+            ${dataScope}
+        </where>
+    </select>
+    <!--根据 item_id查询项目详细信息-->
+    <select id="selectProById" parameterType="String" resultMap="ItemResult">
+       select item_id,dept_id,item_name,item_numbering,emp_id,item_leadertel,item_type,item_phase,
+                item_num,item_startdate,item_enddate,item_fund,workcost,taxrate,customer_id,
+			   change_num,ischange,update_time,remark from project_info  where item_id = #{item_id}
+    </select>
+    <!--写入项目表 -->
+    <insert id="insertProject" parameterType="Item" useGeneratedKeys="true" keyProperty="jobId">
+        INSERT INTO project_info (`item_id`, `dept_id`, `item_name`,`item_numbering`, `emp_id`, `id_card`,`item_leadertel`,  `item_type`, `item_phase`, `item_num`,`item_startdate`,`item_enddate`, `item_fund`,`workcost`,`taxrate`, `item_cycle`,`customer_id`, `ischange`,`change_num`, `remark`)
+                         VALUES (#{item_id}, #{dept_id}, #{item_name},#{item_numbering}, #{empId},#{idCard}, #{item_leadertel},  #{item_type}, #{item_phase}, #{item_num}, #{item_startdate},#{item_enddate},#{item_fund},#{workcost},#{taxrate}, #{item_cycle},#{customer_id}, #{ischange},#{change_num},#{remark});
+    </insert>
+    <!--写入历史表 -->
+    <insert id="addProject" parameterType="Integer" useGeneratedKeys="true" keyProperty="jobId">
+        INSERT INTO project_history_info (SELECT * from project_info WHERE item_id = #{item_id,jdbcType=INTEGER})
+    </insert>
+
+    <delete id="deleteProjectByIds" parameterType="Integer">
+        delete from project_info where item_id in
+        <foreach collection="array" item="item_id" open="(" separator="," close=")">
+            #{item_id}
+        </foreach>
+    </delete>
+
+    <update id="updateProject" parameterType="Item" useGeneratedKeys="true" keyProperty="jobId">
+        UPDATE project_info SET
+        <if test="dept_id != null and dept_id != ''">`dept_id`=#{dept_id}, </if>
+        <if test="item_name != null and item_name != ''">`item_name`=#{item_name}, </if>
+        <if test="item_numbering != null and item_numbering != ''">`item_numbering`=#{item_numbering}, </if>
+        <if test="empId != null and empId != ''">`emp_id`=#{empId},</if>
+        <if test="item_leadertel != null and item_leadertel != ''">`item_leadertel`=#{item_leadertel}, </if>
+        <!--<if test="item_level != null and item_level != ''"> `item_level`=#{item_level}, </if>-->
+        <if test="item_type != null and item_type != ''">`item_type`=#{item_type}, </if>
+        <if test="item_phase != null and item_phase != ''">`item_phase`=#{item_phase}, </if>
+        <if test="item_num != null and item_num != ''">`item_num`=#{item_num}, </if>
+        <if test="item_fund != null and item_fund != ''">`item_fund`=#{item_fund},</if>
+        <if test="workcost != null and workcost != ''">`workcost`=#{workcost},</if>
+        <if test="taxrate != null and taxrate != ''">`taxrate`=#{taxrate},</if>
+        <if test="item_cycle != null and item_cycle != ''">`item_cycle`=#{item_cycle},</if>
+        <if test="customer_id != null and customer_id != ''">`customer_id`=#{customer_id},</if>
+        <!--<if test="item_adress != null and item_adress != ''">`item_adress`=#{item_adress},</if>-->
+        <if test="ischange != null and ischange != ''">`ischange`=#{ischange},</if>
+        <if test="change_num != null and change_num != ''">`change_num`=#{change_num},</if>
+        <if test="item_startdate != null and item_startdate != ''">`item_startdate`=#{item_startdate}, </if>
+        <if test="item_enddate != null and item_enddate != ''">`item_enddate`=#{item_enddate}, </if>
+        `remark`=#{remark}
+         WHERE (`item_id`=#{item_id});
+    </update>
+    <!--根据 item_id查询项目变更记录详细信息-->
+    <select id="selectRecProById" parameterType="String" resultMap="ItemResult">
+      select p.dept_id,p.item_name,p.item_numbering,(select emp_name from employee_info WHERE emp_id = p.emp_id) as emp_id,p.item_leadertel,p.item_type,p.item_phase,
+        p.item_num,p.item_startdate,p.item_enddate,p.item_fund,p.workcost,p.taxrate,
+        (SELECT customer_name FROM customer_info WHERE customer_id = p.customer_id ) AS customer_id,p.change_num,p.update_time,p.remark,d.dept_name, d.leader
+        from project_history_info p left join sys_dept d on p.dept_id = d.dept_id
+        where p.item_id =  #{item_id}
+    </select>
+
+    <!--根据 item_id查询项目人员级别信息-->
+    <select id="selectPerLevelById" parameterType="String" resultType="com.ruoyi.project.project.domain.Itemperlevel">
+      SELECT p.item_level_id, p.item_id,p.customer_id,
+        (SELECT dict_label FROM sys_dict_data WHERE dict_type='item_emp_level' AND dict_value =p.level_name) as  level_name,
+            p.level_num, p.level_price, p.del_flag,p.update_time from proemplevel_info p
+            LEFT JOIN project_info u ON p.item_id = u.item_id
+        where p.item_id = #{item_id} and p.del_flag = '0' order by p.level_name ASC
+    </select>
+    <!--新增项目人员级别-->
+    <insert id="insertPerLevel" parameterType="Itemperlevel" useGeneratedKeys="true" keyProperty="jobId">
+      INSERT INTO proemplevel_info (`item_level_id`, `item_id`,`customer_id`, `level_name`,`level_num`, `level_price`,  `del_flag`)
+                         VALUES (#{item_level_id}, #{item_id},#{customer_id}, #{level_name},#{level_num}, #{level_price}, #{del_flag});
+    </insert>
+    <!--根据 item_level_id查询项目人员级别详细信息-->
+    <select id="selectLevelById" parameterType="String" resultType="com.ruoyi.project.project.domain.Itemperlevel">
+      SELECT item_level_id,item_id,customer_id,level_name,level_num,level_price from proemplevel_info where item_level_id = #{item_level_id}
+    </select>
+    <!--修改项目人员级别信息 -->
+    <update id="updatePerLevel" parameterType="com.ruoyi.project.project.domain.Itemperlevel" useGeneratedKeys="true" keyProperty="jobId">
+        UPDATE proemplevel_info SET
+        <if test="level_name != null and level_name != ''">`level_name`=#{level_name}, </if>
+        <if test="level_price != null and level_price != ''">`level_price`=#{level_price},</if>
+        <if test="level_num != null and level_num != ''">`level_num`=#{level_num} </if>
+        WHERE item_level_id=#{item_level_id};
+    </update>
+    <!--删除项目人员级别信息 -->
+    <delete id="delPerLevel" parameterType="Integer">
+        delete from proemplevel_info where `item_level_id` in
+        <foreach collection="array" item="item_level_id" open="(" separator="," close=")">
+            #{item_level_id}
+        </foreach>
+    </delete>
+    <!-- 查询项目是否有人员级别配置   -->
+    <select id="queryLevelByitem_id"    parameterType="Integer"  resultType="Integer">
+		SELECT count(1) count FROM proemplevel_info  WHERE item_id=#{item_id} and `del_flag`='0'
+	</select>
+
+    <!--根据 item_id查询项目人员信息-->
+    <select id="selectEmp" parameterType="com.ruoyi.project.employee.domain.EmployeeInfo" resultMap="BaseResultMap">
+      SELECT p.emp_id, p.emp_name, p.emp_sex, p.id_card, p.emp_job, p.emp_level,p.emp_email,
+              p.emp_tel, p.emp_age, p.emp_edu, p.emp_adress, p.emp_famadress, p.emp_emecontact, p.emp_emecontacttel,
+              p.emp_workdate, p.emp_state, p.emp_entrydate, p.emp_separdate,p.emp_quitdate, p.remark,  p.emp_no,
+              d.dept_name AS emp_department, d.leader,s.post_name,e.emp_salary,e.emp_insurance,e.emp_fund,f.level_name,u.update_time from employee_info p
+        LEFT JOIN emp_binding u ON p.emp_id = u.emp_id
+        LEFT JOIN project_info a ON a.item_id = u.item_id
+        LEFT JOIN sys_dept d on p.emp_department = d.dept_id
+        LEFT JOIN sys_post s on p.emp_job = s.post_id
+        LEFT JOIN emp_cost e on p.emp_id = e.emp_id
+		LEFT JOIN proemplevel_info f on u.item_level_id = f.item_level_id
+        where  u.item_id = #{item_id} and u.del_flag = '0'
+    </select>
+    <!--根据 item_id查询项目人员信息-->
+    <select id="selectPerById" parameterType="String" resultMap="BaseResultMap">
+        SELECT p.emp_id, p.emp_name, p.emp_sex, p.id_card, p.emp_job, p.emp_level,p.emp_email,
+        p.emp_tel, p.emp_age, p.emp_edu, p.emp_adress, p.emp_famadress, p.emp_emecontact, p.emp_emecontacttel,
+        p.emp_workdate, p.emp_state, p.emp_entrydate, p.emp_separdate,p.emp_quitdate, p.remark,  p.emp_no,
+        d.dept_name AS emp_department, d.leader,s.post_name,e.emp_salary,e.emp_insurance,e.emp_fund,u.update_time from employee_info p
+        LEFT JOIN emp_binding u ON p.emp_id = u.emp_id
+        LEFT JOIN project_info a ON a.item_id = u.item_id
+        LEFT JOIN sys_dept d on p.emp_department = d.dept_id
+        LEFT JOIN sys_post s on p.emp_job = s.post_id
+        LEFT JOIN emp_cost e on p.emp_id = e.emp_id
+        where u.item_level_id = #{item_level_id}
+    </select>
+    <!--根据 item_level_id查询外包人员-->
+    <select id="selectOutPerById" parameterType="String" resultMap="BaseResultMap">
+        SELECT p.emp_id, p.emp_name, p.emp_sex, p.id_card, p.emp_job, p.emp_level,p.emp_email,
+        p.emp_tel, p.emp_age, p.emp_edu, p.emp_adress, p.emp_famadress, p.emp_emecontact, p.emp_emecontacttel,
+        p.emp_workdate, p.emp_state, p.emp_entrydate, p.emp_separdate,p.emp_quitdate, p.remark,  p.emp_no,
+        d.dept_name AS emp_department, d.leader,s.post_name,e.emp_salary,e.emp_insurance,e.emp_fund,u.update_time from employee_info p
+        LEFT JOIN emp_binding u ON p.emp_id = u.emp_id
+        LEFT JOIN project_info a ON a.item_id = u.item_id
+        LEFT JOIN sys_dept d on p.emp_department = d.dept_id
+        LEFT JOIN sys_post s on p.emp_job = s.post_id
+        LEFT JOIN emp_cost e on p.emp_id = e.emp_id
+        where u.item_level_id = #{item_level_id} and u.del_flag = '0'
+    </select>
+    <!--根据 item_id查询项目人员信息-->
+    <select id="selectEmpByItemId" parameterType="String" resultMap="BaseResultMap">
+      SELECT p.emp_id, p.emp_name, p.emp_sex, p.id_card, p.emp_job, p.emp_level,p.emp_email,
+              p.emp_tel, p.emp_age, p.emp_edu, p.emp_adress, p.emp_famadress, p.emp_emecontact, p.emp_emecontacttel,
+              p.emp_workdate, p.emp_state, p.emp_entrydate, p.emp_separdate,p.emp_quitdate, p.remark,  p.emp_no,
+              d.dept_name AS emp_department, d.leader,s.post_name,e.emp_salary,e.emp_insurance,e.emp_fund,u.* from employee_info p
+        LEFT JOIN emp_binding u ON p.emp_id = u.emp_id
+        LEFT JOIN project_info a ON a.item_id = u.item_id
+        LEFT JOIN sys_dept d on p.emp_department = d.dept_id
+        LEFT JOIN sys_post s on p.emp_job = s.post_id
+        LEFT JOIN emp_cost e on p.emp_id = e.emp_id
+        where u.item_id = #{item_id}
+    </select>
+    <!--根据 item_id查询项目人员工资变更信息-->
+    <select id="selectEmpSalaryById" parameterType="String" resultMap="CostResultMap">
+      SELECT h.* FROM emp_cost_history h LEFT JOIN emp_binding u ON h.emp_id = u.emp_id
+        LEFT JOIN project_info a ON a.item_id = u.item_id
+        where u.item_id = #{item_id} and u.del_flag = '0' ORDER BY h.update_time DESC LIMIT 0,1
+    </select>
+    <!--根据 empId查询工资记录-->
+    <select id="selectHisSalaryById" parameterType="String" resultMap="CostResultMap">
+        SELECT * FROM emp_cost_history
+        where emp_id = #{empId}  ORDER BY update_time DESC LIMIT 0,1
+     </select>
+    <!--新增项目人员绑定信息-->
+    <insert id="insertProper" parameterType="Itemper" useGeneratedKeys="true" keyProperty="jobId">
+        INSERT INTO emp_binding (`pp_id`, `emp_id`, `item_id`,`item_level_id`,`emp_type`,`startdate`,`enddate`,`del_flag`)
+                         VALUES (#{ppid}, #{empid}, #{itemid},#{item_level_id},#{emptype},#{startdate},#{enddate},#{delflag} );
+    </insert>
+
+    <!--解绑项目人员信息 -->
+    <update id="updateProPer" parameterType="Itemper" >
+        UPDATE emp_binding SET
+        `del_flag`=#{delflag},enddate = #{enddate}
+        <where>
+        <if test="itemid != null and itemid != ''" >
+             item_id = #{itemid,jdbcType=VARCHAR}
+        </if>
+        <if test="empid != null and empid != ''" >
+            AND emp_id = #{empid,jdbcType=VARCHAR}
+        </if>
+        <if test="item_level_id != null and item_level_id != ''" >
+            AND item_level_id = #{item_level_id,jdbcType=VARCHAR}
+        </if>
+        </where>
+    </update>
+    <!--修改项目人员绑定信息 -->
+    <update id="updateBinding" parameterType="Itemper" >
+        UPDATE emp_binding SET
+        emp_type=#{emptype},startdate=#{startdate},enddate = #{enddate},`del_flag`=#{delflag}
+        <where>
+            <if test="itemid != null and itemid != ''" >
+                item_id = #{itemid,jdbcType=VARCHAR}
+            </if>
+            <if test="empid != null and empid != ''" >
+                AND emp_id = #{empid,jdbcType=VARCHAR}
+            </if>
+            <if test="item_level_id != null and item_level_id != ''" >
+                AND item_level_id = #{item_level_id,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </update>
+
+    <!--查询员工信息 -->
+    <select id="selectEmpList" resultMap="BaseResultMap" parameterType="com.ruoyi.project.employee.domain.EmployeeInfo">
+        select DISTINCT
+        p.emp_id, p.emp_name, p.emp_sex, p.id_card, p.emp_job, p.emp_level,p.emp_email,
+        p.emp_tel, p.emp_age, p.emp_edu, p.emp_adress, p.emp_famadress, p.emp_emecontact,
+        p.emp_emecontacttel,p.emp_workdate, p.emp_state, p.emp_entrydate, p.emp_separdate,p.emp_quitdate,p.major,
+        p.remark,  p.emp_no,d.dept_name AS emp_department, d.leader,s.post_name
+        from employee_info p
+        LEFT JOIN sys_dept d on p.emp_department = d.dept_id
+        LEFT JOIN sys_post s on p.emp_job = s.post_id
+        <where>
+            <if test="empName != null and empName != ''" >
+                 p.emp_name LIKE  concat('%',#{empName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="empDepartment != null and empDepartment != ''" >
+                AND p.emp_department = #{empDepartment,jdbcType=VARCHAR}
+            </if>
+            <if test="empLevel != null and empLevel != ''" >
+                AND p.emp_level = #{empLevel,jdbcType=VARCHAR}
+            </if>
+            <if test="empState != null and empState != ''" >
+                AND p.emp_state = #{empState,jdbcType=VARCHAR}
+            </if>
+            <if test="empEdu != null and empEdu != ''" >
+                AND p.emp_edu = #{empEdu,jdbcType=VARCHAR}
+            </if>
+                AND p.emp_id  not in (select emp_id from emp_binding where del_flag = '0')
+                AND p.emp_state != '2'
+        </where>
+    </select>
+
+    <!--查询员工是否绑定项目-->
+    <select id="selectIsBindEmpList" parameterType="Itemper" resultMap="ItemperResultMap">
+      SELECT * from emp_binding
+        <where>
+            <if test="itemid != null and itemid != ''" >
+                item_id = #{itemid}
+            </if>
+            <if test="empid != null and empid != ''" >
+                AND emp_id = #{empid}
+            </if>
+            <if test="item_level_id != null and item_level_id != ''" >
+                AND item_level_id = #{item_level_id}
+            </if>
+            <if test="delflag != null and delflag != ''" >
+                AND del_flag = #{delflag}
+            </if>
+        </where>
+    </select>
+
+    <!--查询员工是否解绑-->
+    <select id="selectUnbundling" parameterType="Itemper" resultType="Itemper">
+      SELECT * from emp_binding
+        where  item_id = #{itemid} and emp_id = #{empid}
+    </select>
+    <!--查询员工绑定信息-->
+    <select id="selectbundling" parameterType="Itemper" resultType="Itemper">
+      SELECT * from emp_binding
+        where  item_id = #{itemid} and item_level_id = #{item_level_id} and emp_id = #{empid}
+    </select>
+    <!--根据 customer_id查询合同信息-->
+    <select id="selectContractById" parameterType="String" resultType="com.ruoyi.project.customer.domain.Contract">
+      SELECT * from contract_info
+        where item_id = #{item_id} and `del_flag`='0'
+    </select>
+
+    <!--根据 contract_id查询合同附件信息-->
+    <select id="selectDocByContract" resultMap="DocResultMap" parameterType="java.lang.String" >
+        select
+        doc_id, emp_id, doc_name, doc_size, doc_path, doc_type, update_time, item_id
+        from emp_document
+        where item_id = #{itemId,jdbcType=VARCHAR}
+        order by update_time asc
+    </select>
+    <!--根据 contract_id查询合同信息-->
+    <select id="selectByPrimaryKey" parameterType="String" resultType="com.ruoyi.project.customer.domain.Contract">
+      SELECT * from contract_info
+        where contract_id = #{contract_id}
+    </select>
+    <!-- 查询客户名称   -->
+    <select id="selectCustomer" parameterType="String"  resultType="com.ruoyi.project.customer.domain.Customer">
+		SELECT *  FROM customer_info  WHERE  customer_type = #{item_type} and `del_flag`='0'
+	</select>
+    <!--根据 查询项目人员级别信息-->
+    <select id="selectIsLevel" parameterType="Itemperlevel" resultType="com.ruoyi.project.project.domain.Itemperlevel">
+      SELECT p.* from proemplevel_info p LEFT JOIN project_info u ON p.item_id = u.item_id
+        where p.item_id = #{item_id} and p.level_name =#{level_name}  and p.del_flag = '0'
+    </select>
+
+    <!--根据 item_id查询项目人员信息-->
+    <select id="listPerBinding" parameterType="String" resultMap="BaseResultMap">
+      SELECT e.* FROM employee_info e LEFT JOIN emp_binding b ON e.emp_id = b.emp_id
+            LEFT JOIN proemplevel_info a ON a.item_level_id= b.item_level_id
+             WHERE a.item_id =#{item_id}
+    </select>
+
+    <!--根据empid查询员工是否设置工资信息-->
+    <select id="selectEmpcost" parameterType="EmpCost" resultMap="CostResultMap">
+      SELECT * from emp_cost  where emp_id = #{empId}
+    </select>
+    <!--写入项目人员闲置表 -->
+    <insert id="insertEmpidle" parameterType="com.ruoyi.project.project.domain.Empidle" >
+        INSERT INTO emp_idle (`idle_id`, `emp_id`, `beforeitem_id`, `startdate`, `enddate`,  `del_flag`)
+                         VALUES (#{idleId}, #{empId}, #{beforeitemId}, #{startdate}, #{enddate},  #{delFlag});
+    </insert>
+    <!--根据empid查询员工闲置表-->
+    <select id="selectEmpidle" parameterType="Integer" resultType="com.ruoyi.project.project.domain.Empidle">
+      SELECT * from emp_idle  where emp_id = #{emp_id}
+    </select>
+    <!--写入闲置历史表 -->
+    <insert id="addEmpidlehis" parameterType="Integer" useGeneratedKeys="true" keyProperty="jobId">
+        INSERT INTO emp_idle_history(emp_id, beforeitem_id,idleday, startdate, enddate,  del_flag)
+            (SELECT emp_id, beforeitem_id,idleday, startdate, enddate,  del_flag from emp_idle WHERE emp_id = #{emp_id})
+    </insert>
+    <!--修改项目人员闲置表 -->
+    <update id="updateEmpidle" parameterType="com.ruoyi.project.project.domain.Empidle" >
+        UPDATE emp_idle SET
+        <if test="beforeitem_id != null and beforeitem_id != ''">`beforeitem_id`=#{beforeitem_id}, </if>
+        <if test="idleday != null and idleday != ''">`idleday`=#{idleday}, </if>
+        <if test="startdate != null and startdate != ''">`startdate`=#{startdate}, </if>
+        <if test="enddate != ''">`enddate`=#{enddate},</if>
+        <if test="del_flag != null and del_flag != ''">`del_flag`=#{del_flag}</if>
+        where emp_id=#{emp_id,jdbcType=INTEGER}
+    </update>
+    <!--查询员工绑定信息-->
+    <select id="selectbindling" parameterType="Itemper" resultMap="ItemperResultMap">
+      SELECT  emp_id, item_id,item_level_id,emp_type,startdate,enddate,del_flag from emp_binding
+        where   emp_id = #{empid} ORDER BY update_time DESC
+    </select>
+    <!--查询外包员工绑定信息-->
+    <select id="selectPercostbundling" parameterType="Itemper" resultMap="ItemperResultMap">
+      SELECT a.*,b.level_price,(SELECT dict_label FROM sys_dict_data WHERE dict_type='item_emp_level' AND dict_value =b.level_name) as  level_name from emp_binding a LEFT JOIN proemplevel_info b ON a.item_level_id = b.item_level_id
+        where  a.item_id = #{itemid} and a.emp_id = #{empid} ORDER BY a.update_time ASC
+    </select>
+    <!--查询外包员工是否有解绑记录-->
+    <select id="selectIsUnbundling" parameterType="Itemper" resultMap="ItemperResultMap">
+      SELECT * from emp_binding
+        where  item_id = #{itemid} and emp_id = #{empid}
+              and del_flag = '2'  ORDER BY update_time ASC
+    </select>
+    <!--查询外包员工级别ID-->
+    <select id="selectLevelId" parameterType="Itemper" resultType="String">
+      SELECT item_level_id from emp_binding
+      WHERE item_id = #{itemid} and emp_id = #{empid} order by update_time DESC LIMIT 0,1
+    </select>
+    <!--查询绑定级别信息-->
+    <select id="selectBinding" resultMap="ItemperResultMap">
+    SELECT * from emp_binding WHERE emp_type = '2' and del_flag = '0'
+    </select>
+    <!--写入级别变更消息表 -->
+    <insert id="addLevelChangeInfo" parameterType="com.ruoyi.project.project.domain.LevelChangeInfo" useGeneratedKeys="true" keyProperty="jobId">
+        INSERT INTO levelchange_info (`lc_id`, `emp_id`, `item_id`, `item_level_id`, `lcstatus`,`emp_edu`,`edu_graduation`,  `createdate`, `del_flag`,  `message`)
+                         VALUES (#{lc_id}, #{emp_id}, #{item_id}, #{item_level_id}, #{lcstatus},#{emp_edu},#{edu_graduation},  #{createdate}, #{del_flag},  #{message});
+    </insert>
+    <!--查询级别变更信息-->
+    <select id="getLevelChangeInfo" parameterType="com.ruoyi.project.project.domain.LevelChangeInfo" resultMap="LevelChangeInfoResultMap">
+     SELECT b.emp_name as empName,c.item_name as itemName,
+        (SELECT dict_label FROM sys_dict_data WHERE dict_type='item_emp_level' AND dict_value =d.level_name) as  level_name,
+				(SELECT dict_label FROM sys_dict_data WHERE dict_type='emp_edu' AND dict_value =e.emp_edu) as  emp_edu, e.edu_graduation,
+        createdate,message from levelchange_info a
+        LEFT JOIN employee_info b on a.emp_id = b.emp_id
+		LEFT JOIN education_info e on a.emp_id = e.emp_id
+        LEFT JOIN project_info c on a.item_id = c.item_id
+        LEFT JOIN proemplevel_info d on a.item_level_id = d.item_level_id
+        <where>
+            <if test="lcstatus != null and lcstatus != ''" >
+                a.lcstatus = #{lcstatus}
+            </if>
+            and a.del_flag = '0'
+        </where>
+    </select>
+    <!--修改外包人员级别信息状态 -->
+    <update id="updateLevelChangeInfo" parameterType="com.ruoyi.project.project.domain.LevelChangeInfo" >
+        UPDATE levelchange_info SET
+        `lcstatus`=#{lcstatus}
+        <where>
+            <if test="item_id != null and item_id != ''" >
+                item_id = #{item_id,jdbcType=VARCHAR}
+            </if>
+            <if test="emp_id != null and emp_id != ''" >
+                AND emp_id = #{emp_id,jdbcType=VARCHAR}
+            </if>
+            <if test="item_level_id != null and item_level_id != ''" >
+                AND item_level_id = #{item_level_id,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </update>
+    <!--查询项目人员级别人数信息-->
+    <select id="selectLevelnum" parameterType="Itemperlevel" resultType="com.ruoyi.project.project.domain.Itemperlevel">
+      SELECT item_level_id,item_id,customer_id,level_name,level_num,level_price from proemplevel_info where item_level_id = #{item_level_id} and item_id= #{item_id}
+    </select>
+
+    <select id="selectHistoryPro" parameterType="string" resultType="map">
+      SELECT item_numbering, item_name, item_type,
+        (SELECT dept_name FROM sys_dept WHERE dept_id = p.dept_id) AS dept_name,
+        (SELECT emp_name FROM employee_info WHERE emp_id = p.emp_id) AS emp_name,
+        item_startdate AS startdate,
+        item_enddate AS enddate
+        FROM project_info p WHERE item_id in (
+          SELECT item_id FROM emp_binding WHERE emp_id=1 AND del_flag = 2
+        )
+    </select>
+
+    <!--查询人员信息-->
+    <select id="selectEmpId" parameterType="EmployeeInfo" resultType="String">
+      SELECT emp_id FROM employee_info   WHERE id_card =#{IdCard}
+    </select>
+
+</mapper>

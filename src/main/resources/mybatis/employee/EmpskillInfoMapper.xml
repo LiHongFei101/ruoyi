@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.project.employee.mapper.EmpskillInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.ruoyi.project.employee.domain.EmpskillInfo" >
+    <id column="skill_id" property="skillId" jdbcType="VARCHAR" />
+    <result column="emp_id" property="empId" jdbcType="VARCHAR" />
+    <result column="skill_no" property="skillNo" jdbcType="VARCHAR" />
+    <result column="skill_name" property="skillName" jdbcType="VARCHAR" />
+    <result column="skill_level" property="skillLevel" jdbcType="VARCHAR" />
+    <result column="certification_org" property="certificationOrg" jdbcType="VARCHAR" />
+    <result column="document_id" property="documentId" jdbcType="VARCHAR" />
+    <result column="skill_date" property="skillDate" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    skill_id, emp_id, skill_no, skill_name, skill_level,
+    certification_org, document_id, skill_date, update_time
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from empskill_info
+    where skill_id = #{skillId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByEmp" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from empskill_info
+    where emp_id = #{empId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByName" resultMap="BaseResultMap" parameterType="com.ruoyi.project.employee.domain.EmpskillInfo" >
+    select
+    <include refid="Base_Column_List" />
+    from empskill_info
+    where emp_id = #{empId, jdbcType=VARCHAR} AND skill_name = #{skillName, jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from empskill_info
+    where skill_id = #{skillId,jdbcType=VARCHAR}
+  </delete>
+
+  <delete id="deleteByIds" parameterType="java.lang.String" >
+    delete from empskill_info
+    where skill_id IN
+    <foreach collection="array" item="skillId" open="(" separator="," close=")">
+      #{skillId}
+    </foreach>
+  </delete>
+
+  <insert id="insert" parameterType="com.ruoyi.project.employee.domain.EmpskillInfo" useGeneratedKeys="true" keyProperty="skillId">
+    insert into empskill_info (skill_id, emp_id, skill_no,
+      skill_name, skill_level, certification_org, document_id,
+      skill_date, update_time)
+    values (#{skillId,jdbcType=VARCHAR}, #{empId,jdbcType=VARCHAR}, #{skillNo,jdbcType=VARCHAR}, 
+      #{skillName,jdbcType=VARCHAR}, #{skillLevel,jdbcType=VARCHAR}, #{certificationOrg,jdbcType=VARCHAR},
+      #{documentId,jdbcType=VARCHAR}, #{skillDate,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ruoyi.project.employee.domain.EmpskillInfo" >
+    insert into empskill_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="skillId != null" >
+        skill_id,
+      </if>
+      <if test="empId != null" >
+        emp_id,
+      </if>
+      <if test="skillNo != null" >
+        skill_no,
+      </if>
+      <if test="skillName != null" >
+        skill_name,
+      </if>
+      <if test="skillLevel != null" >
+        skill_level,
+      </if>
+      <if test="certificationOrg != null" >
+        certification_org,
+      </if>
+      <if test="documentId != null" >
+        document_id,
+      </if>
+      <if test="skillDate != null" >
+        skill_date,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="skillId != null" >
+        #{skillId,jdbcType=VARCHAR},
+      </if>
+      <if test="empId != null" >
+        #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="skillNo != null" >
+        #{skillNo,jdbcType=VARCHAR},
+      </if>
+      <if test="skillName != null" >
+        #{skillName,jdbcType=VARCHAR},
+      </if>
+      <if test="skillLevel != null" >
+        #{skillLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="certificationOrg != null" >
+        #{certificationOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="documentId != null" >
+        #{documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="skillDate != null" >
+        #{skillDate,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.project.employee.domain.EmpskillInfo" >
+    update empskill_info
+    <set >
+      <if test="empId != null" >
+        emp_id = #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="skillNo != null" >
+        skill_no = #{skillNo,jdbcType=VARCHAR},
+      </if>
+      <if test="skillName != null" >
+        skill_name = #{skillName,jdbcType=VARCHAR},
+      </if>
+      <if test="skillLevel != null" >
+        skill_level = #{skillLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="certificationOrg != null" >
+        certification_org = #{certificationOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="documentId != null" >
+        document_id = #{documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="skillDate != null" >
+        skill_date = #{skillDate,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where skill_id = #{skillId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.project.employee.domain.EmpskillInfo" >
+    update empskill_info
+    set emp_id = #{empId,jdbcType=VARCHAR},
+      skill_no = #{skillNo,jdbcType=VARCHAR},
+      skill_name = #{skillName,jdbcType=VARCHAR},
+      skill_level = #{skillLevel,jdbcType=VARCHAR},
+      certification_org = #{certificationOrg,jdbcType=VARCHAR},
+      document_id = #{documentId,jdbcType=VARCHAR},
+      skill_date = #{skillDate,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where skill_id = #{skillId,jdbcType=VARCHAR}
+  </update>
+</mapper>

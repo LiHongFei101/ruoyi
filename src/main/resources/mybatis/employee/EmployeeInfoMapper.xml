@@ -1,0 +1,665 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.project.employee.mapper.EmployeeInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.ruoyi.project.employee.domain.EmployeeInfo" >
+    <id column="emp_id" property="empId" jdbcType="VARCHAR" />
+    <result column="emp_name" property="empName" jdbcType="VARCHAR" />
+    <result column="emp_sex" property="empSex" jdbcType="CHAR" />
+    <result column="id_card" property="idCard" jdbcType="VARCHAR" />
+    <result column="emp_department" property="empDepartment" jdbcType="VARCHAR" />
+    <result column="emp_job" property="empJob" jdbcType="VARCHAR" />
+    <result column="emp_level" property="empLevel" jdbcType="VARCHAR" />
+    <result column="emp_tel" property="empTel" jdbcType="VARCHAR" />
+    <result column="emp_age" property="empAge" jdbcType="INTEGER" />
+    <result column="emp_edu" property="empEdu" jdbcType="VARCHAR" />
+    <result column="major" property="major" jdbcType="VARCHAR" />
+    <result column="emp_email" property="empEmail" jdbcType="VARCHAR" />
+    <result column="emp_adress" property="empAdress" jdbcType="VARCHAR" />
+    <result column="emp_famadress" property="empFamadress" jdbcType="VARCHAR" />
+    <result column="emp_emecontact" property="empEmecontact" jdbcType="VARCHAR" />
+    <result column="emp_emecontacttel" property="empEmecontacttel" jdbcType="VARCHAR" />
+    <result column="emp_workdate" property="empWorkdate" jdbcType="VARCHAR" />
+    <result column="emp_state" property="empState" jdbcType="VARCHAR" />
+    <result column="emp_entrydate" property="empEntrydate" jdbcType="VARCHAR" />
+    <result column="emp_separdate" property="empSepardate" jdbcType="VARCHAR" />
+    <result column="emp_quitdate" property="empQuitdate" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="emp_no" property="empNo" jdbcType="VARCHAR" />
+    <result column="item_name" property="projectName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    emp_id, emp_name, emp_sex, id_card,emp_department, emp_job, emp_level,
+    emp_tel, emp_age, emp_edu, major, emp_email, emp_adress, emp_famadress, emp_emecontact, emp_emecontacttel,
+    emp_workdate, emp_state, emp_entrydate, emp_separdate,emp_quitdate, remark, update_time
+  </sql>
+
+  <sql id="Base_Column_List_dept" >
+    emp_id, emp_name, emp_sex, id_card,
+    (SELECT dept_name FROM sys_dept WHERE dept_id = emp_department) AS emp_department,
+    (SELECT post_name FROM sys_post WHERE post_id = emp_job) AS emp_job, emp_level,
+    emp_tel, emp_age, emp_edu, major, emp_email, emp_adress, emp_famadress, emp_emecontact, emp_emecontacttel,
+    emp_workdate, emp_state, emp_entrydate, emp_separdate,emp_quitdate, remark, update_time
+  </sql>
+  <sql id="Base_Column_List_project" >
+    emp_id, emp_name, emp_sex, id_card,
+    (SELECT dept_name FROM sys_dept WHERE dept_id = emp_department) AS emp_department,
+    (SELECT post_name FROM sys_post WHERE post_id = emp_job) AS emp_job, emp_level,
+    (SELECT GROUP_CONCAT(item_name) from project_info WHERE item_id in (SELECT b.item_id FROM emp_binding b WHERE b.del_flag = '0' AND b.emp_id = emp_id)) AS projectName,
+    emp_tel, emp_age, emp_edu, major, emp_email, emp_adress, emp_famadress, emp_emecontact, emp_emecontacttel,
+    emp_workdate, emp_state, emp_entrydate, emp_separdate,emp_quitdate, remark, update_time
+  </sql>
+
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from employee_info
+    where emp_id = #{empId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByWhere" resultMap="BaseResultMap" parameterType="com.ruoyi.project.employee.domain.EmployeeInfo">
+    select
+    <include refid="Base_Column_List_dept" />
+    from employee_info
+    <where>
+      <if test="empName != null and empName != ''" >
+        AND emp_name LIKE concat('%', #{empName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="empSex != null and empSex != ''" >
+        AND emp_sex = #{empSex,jdbcType=CHAR}
+      </if>
+      <if test="idCard != null and idCard != ''" >
+        AND id_card LIKE concat('%', #{idCard,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="empDepartment != null and empDepartment != '' and empDepartment !=0" >
+        AND (emp_department = #{empDepartment,jdbcType=VARCHAR} OR
+        emp_department IN (
+          SELECT t.dept_id FROM sys_dept t
+          WHERE FIND_IN_SET
+          (#{empDepartment,jdbcType=VARCHAR},ancestors)
+        ))
+      </if>
+      <if test="empJob != null and empJob != ''" >
+        AND emp_job = #{empJob,jdbcType=VARCHAR}
+      </if>
+      <if test="empLevel != null and empLevel != ''" >
+        AND emp_level = #{empLevel,jdbcType=VARCHAR}
+      </if>
+      <if test="empTel != null and empTel != ''" >
+        AND emp_tel = #{empTel,jdbcType=VARCHAR}
+      </if>
+      <if test="empAge != null and empAge != ''" >
+        AND emp_age = #{empAge,jdbcType=INTEGER}
+      </if>
+      <if test="empEdu != null and empEdu != ''" >
+        AND emp_edu = #{empEdu,jdbcType=VARCHAR}
+      </if>
+      <if test="major != null and major != ''" >
+        AND major = LIKE concat('%', #{major,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="empEmail != null and empEmail != ''" >
+        AND emp_email = #{empEmail,jdbcType=VARCHAR}
+      </if>
+      <if test="empAdress != null and empAdress != ''" >
+        AND emp_adress = #{empAdress,jdbcType=VARCHAR}
+      </if>
+      <if test="empFamadress != null and empFamadress != ''" >
+        AND emp_famadress = #{empFamadress,jdbcType=VARCHAR}
+      </if>
+      <if test="empEmecontact != null and empEmecontact != ''" >
+        AND emp_emecontact = #{empEmecontact,jdbcType=VARCHAR}
+      </if>
+      <if test="empEmecontacttel != null and empEmecontacttel != ''" >
+        AND emp_emecontacttel = #{empEmecontacttel,jdbcType=VARCHAR}
+      </if>
+      <if test="empWorkdate != null and empWorkdate != ''" >
+        AND emp_workdate = #{empWorkdate,jdbcType=VARCHAR}
+      </if>
+      <if test="empState != null and empState != ''" >
+        AND emp_state = #{empState,jdbcType=VARCHAR}
+      </if>
+      <if test="empEntrydate != null and empEntrydate != ''" >
+        AND emp_entrydate = #{empEntrydate,jdbcType=VARCHAR}
+      </if>
+      <if test="empSepardate != null and empSepardate != ''" >
+        AND emp_separdate = #{empSepardate,jdbcType=VARCHAR}
+      </if>
+      <if test="empQuitdate != null and empQuitdate != ''" >
+        AND emp_quitdate = #{empQuitdate,jdbcType=VARCHAR}
+      </if>
+      <if test="remark != null and remark != ''" >
+        AND remark = #{remark,jdbcType=VARCHAR}
+      </if>
+      <if test="updateTime != null and updateTime != ''" >
+        AND update_time = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="empNo != null and empNo != ''" >
+        AND emp_no LIKE concat('%', #{empNo,jdbcType=VARCHAR},'%')
+      </if>
+    </where>
+  </select>
+
+  <select id="selectEmpInfoPro" resultMap="BaseResultMap" parameterType="com.ruoyi.project.employee.domain.EmployeeInfo">
+    SELECT e.emp_id, e.emp_name, e.emp_sex, e.id_card,
+    (SELECT dept_name FROM sys_dept WHERE dept_id = e.emp_department) AS emp_department,
+    (SELECT post_name FROM sys_post WHERE post_id = e.emp_job) AS emp_job, e.emp_level,
+    e.emp_tel, e.emp_age, e.emp_edu, e.major, e.emp_email, e.emp_adress, e.emp_famadress, e.emp_emecontact, e.emp_emecontacttel,
+    e.emp_workdate, e.emp_state, e.emp_entrydate, e.emp_separdate,e.emp_quitdate, e.remark, e.update_time, e.emp_no,
+    (CASE WHEN (p.item_name IS NULL) THEN '闲置资源池' ELSE p.item_name END) AS item_name
+    FROM employee_info e LEFT JOIN emp_binding b ON e.emp_id = b.emp_id AND b.del_flag='0'
+    LEFT JOIN project_info p ON p.item_id = b.item_id
+    <where>
+      <if test="empName != null and empName != ''" >
+        AND e.emp_name LIKE concat('%', #{empName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="empSex != null and empSex != ''" >
+        AND e.emp_sex = #{empSex,jdbcType=CHAR}
+      </if>
+      <if test="idCard != null and idCard != ''" >
+        AND e.id_card LIKE concat('%', #{idCard,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="empDepartment != null and empDepartment != '' and empDepartment !=0" >
+        AND (e.emp_department = #{empDepartment,jdbcType=VARCHAR} OR
+        e.emp_department IN (
+          SELECT t.dept_id FROM sys_dept t WHERE FIND_IN_SET
+          (#{empDepartment,jdbcType=VARCHAR},ancestors)
+        ))
+      </if>
+      <if test="empJob != null and empJob != ''" >
+        AND e.emp_job = #{empJob,jdbcType=VARCHAR}
+      </if>
+      <if test="empLevel != null and empLevel != ''" >
+        AND e.emp_level = #{empLevel,jdbcType=VARCHAR}
+      </if>
+      <if test="empTel != null and empTel != ''" >
+        AND e.emp_tel = #{empTel,jdbcType=VARCHAR}
+      </if>
+      <if test="empAge != null and empAge != ''" >
+        AND e.emp_age = #{empAge,jdbcType=INTEGER}
+      </if>
+      <if test="empEdu != null and empEdu != ''" >
+        AND e.emp_edu = #{empEdu,jdbcType=VARCHAR}
+      </if>
+      <if test="major != null and major != ''" >
+        AND major LIKE concat('%', #{major,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="empEmail != null and empEmail != ''" >
+        AND e.emp_email = #{empEmail,jdbcType=VARCHAR}
+      </if>
+      <if test="empAdress != null and empAdress != ''" >
+        AND e.emp_adress = #{empAdress,jdbcType=VARCHAR}
+      </if>
+      <if test="empFamadress != null and empFamadress != ''" >
+        AND e.emp_famadress = #{empFamadress,jdbcType=VARCHAR}
+      </if>
+      <if test="empEmecontact != null and empEmecontact != ''" >
+        AND e.emp_emecontact = #{empEmecontact,jdbcType=VARCHAR}
+      </if>
+      <if test="empEmecontacttel != null and empEmecontacttel != ''" >
+        AND e.emp_emecontacttel = #{empEmecontacttel,jdbcType=VARCHAR}
+      </if>
+      <if test="empWorkdate != null and empWorkdate != ''" >
+        AND e.emp_workdate = #{empWorkdate,jdbcType=VARCHAR}
+      </if>
+      <if test="empState != null and empState != ''" >
+        AND e.emp_state = #{empState,jdbcType=VARCHAR}
+      </if>
+      <if test="empEntrydate != null and empEntrydate != ''" >
+        AND e.emp_entrydate = #{empEntrydate,jdbcType=VARCHAR}
+      </if>
+      <if test="empSepardate != null and empSepardate != ''" >
+        AND e.emp_separdate = #{empSepardate,jdbcType=VARCHAR}
+      </if>
+      <if test="empQuitdate != null and empQuitdate != ''" >
+        AND e.emp_quitdate = #{empQuitdate,jdbcType=VARCHAR}
+      </if>
+      <if test="remark != null and remark != ''" >
+        AND e.remark = #{remark,jdbcType=VARCHAR}
+      </if>
+      <if test="updateTime != null and updateTime != ''" >
+        AND e.update_time = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="empNo != null and empNo != ''" >
+        AND e.emp_no LIKE concat('%', #{empNo,jdbcType=VARCHAR},'%')
+      </if>
+    </where>
+  </select>
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from employee_info
+    where emp_id = #{empId,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.ruoyi.project.employee.domain.EmployeeInfo" useGeneratedKeys="true" keyProperty="empId">
+    insert into employee_info (emp_id, emp_name, emp_sex,
+      id_card,emp_department, emp_job,
+      emp_level, emp_tel, emp_age, emp_edu, major,
+      emp_email, emp_adress, emp_famadress,
+      emp_emecontact, emp_emecontacttel, emp_workdate, 
+      emp_state, emp_entrydate, emp_separdate, emp_quitdate,
+      remark, update_time, emp_no
+      )
+    values (#{empId,jdbcType=VARCHAR}, #{empName,jdbcType=VARCHAR}, #{empSex,jdbcType=CHAR}, 
+      #{idCard,jdbcType=VARCHAR},#{empDepartment,jdbcType=VARCHAR}, #{empJob,jdbcType=VARCHAR},
+      #{empLevel,jdbcType=VARCHAR}, #{empTel,jdbcType=VARCHAR}, #{empAge,jdbcType=INTEGER}, #{empEdu,jdbcType=VARCHAR},
+      #{major,jdbcType=VARCHAR},#{empEmail,jdbcType=VARCHAR}, #{empAdress,jdbcType=VARCHAR}, #{empFamadress,jdbcType=VARCHAR},
+      #{empEmecontact,jdbcType=VARCHAR}, #{empEmecontacttel,jdbcType=VARCHAR}, #{empWorkdate,jdbcType=VARCHAR}, 
+      #{empState,jdbcType=VARCHAR}, #{empEntrydate,jdbcType=VARCHAR}, #{empSepardate,jdbcType=VARCHAR}, #{empQuitdate,jdbcType=VARCHAR},
+      #{remark,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{empNo,jdbcType=VARCHAR}
+      )
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.ruoyi.project.employee.domain.EmployeeInfo" useGeneratedKeys="true" keyProperty="empId">
+    insert into employee_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="empId != null" >
+        emp_id,
+      </if>
+      <if test="empName != null" >
+        emp_name,
+      </if>
+      <if test="empSex != null" >
+        emp_sex,
+      </if>
+      <if test="idCard != null" >
+        id_card,
+      </if>
+      <if test="empDepartment != null" >
+        emp_department,
+      </if>
+      <if test="empJob != null" >
+        emp_job,
+      </if>
+      <if test="empLevel != null" >
+        emp_level,
+      </if>
+      <if test="empTel != null" >
+        emp_tel,
+      </if>
+      <if test="empAge != null" >
+        emp_age,
+      </if>
+      <if test="empEdu != null" >
+        emp_edu,
+      </if>
+      <if test ="major !=null">
+        major,
+      </if>
+      <if test="empEmail != null" >
+        emp_email,
+      </if>
+      <if test="empAdress != null" >
+        emp_adress,
+      </if>
+      <if test="empFamadress != null" >
+        emp_famadress,
+      </if>
+      <if test="empEmecontact != null" >
+        emp_emecontact,
+      </if>
+      <if test="empEmecontacttel != null" >
+        emp_emecontacttel,
+      </if>
+      <if test="empWorkdate != null" >
+        emp_workdate,
+      </if>
+      <if test="empState != null" >
+        emp_state,
+      </if>
+      <if test="empEntrydate != null" >
+        emp_entrydate,
+      </if>
+      <if test="empSepardate != null" >
+        emp_separdate,
+      </if>
+      <if test="empQuitdate != null" >
+        emp_quitdate,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="empNo != null" >
+        emp_no,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="empId != null" >
+        #{empId,jdbcType=VARCHAR},
+      </if>
+      <if test="empName != null" >
+        #{empName,jdbcType=VARCHAR},
+      </if>
+      <if test="empSex != null" >
+        #{empSex,jdbcType=CHAR},
+      </if>
+      <if test="idCard != null" >
+        #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="empDepartment != null" >
+        #{empDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="empJob != null" >
+        #{empJob,jdbcType=VARCHAR},
+      </if>
+      <if test="empLevel != null" >
+        #{empLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="empTel != null" >
+        #{empTel,jdbcType=VARCHAR},
+      </if>
+      <if test="empAge != null" >
+        #{empAge,jdbcType=INTEGER},
+      </if>
+      <if test="empEdu != null" >
+        #{empEdu,jdbcType=VARCHAR},
+      </if>
+      <if test="major != null" >
+        #{major,jdbcType=VARCHAR},
+      </if>
+      <if test="empEmail != null" >
+        #{empEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="empAdress != null" >
+        #{empAdress,jdbcType=VARCHAR},
+      </if>
+      <if test="empFamadress != null" >
+        #{empFamadress,jdbcType=VARCHAR},
+      </if>
+      <if test="empEmecontact != null" >
+        #{empEmecontact,jdbcType=VARCHAR},
+      </if>
+      <if test="empEmecontacttel != null" >
+        #{empEmecontacttel,jdbcType=VARCHAR},
+      </if>
+      <if test="empWorkdate != null" >
+        #{empWorkdate,jdbcType=VARCHAR},
+      </if>
+      <if test="empState != null" >
+        #{empState,jdbcType=VARCHAR},
+      </if>
+      <if test="empEntrydate != null" >
+        #{empEntrydate,jdbcType=VARCHAR},
+      </if>
+      <if test="empSepardate != null" >
+        #{empSepardate,jdbcType=VARCHAR},
+      </if>
+      <if test="empQuitdate != null" >
+         #{empQuitdate,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="empNo != null" >
+        #{empNo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ruoyi.project.employee.domain.EmployeeInfo" >
+    update employee_info
+    <set >
+      <if test="empName != null" >
+        emp_name = #{empName,jdbcType=VARCHAR},
+      </if>
+      <if test="empSex != null" >
+        emp_sex = #{empSex,jdbcType=CHAR},
+      </if>
+      <if test="idCard != null" >
+        id_card = #{idCard,jdbcType=VARCHAR},
+      </if>
+      <if test="empDepartment != null" >
+        emp_department = #{empDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="empJob != null" >
+        emp_job = #{empJob,jdbcType=VARCHAR},
+      </if>
+      <if test="empLevel != null" >
+        emp_level = #{empLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="empTel != null" >
+        emp_tel = #{empTel,jdbcType=VARCHAR},
+      </if>
+      <if test="empAge != null" >
+        emp_age = #{empAge,jdbcType=INTEGER},
+      </if>
+      <if test="empEdu != null" >
+        emp_edu = #{empEdu,jdbcType=VARCHAR},
+      </if>
+      <if test="major != null" >
+        major = #{major,jdbcType=VARCHAR},
+      </if>
+      <if test="empEmail != null" >
+        emp_email = #{empEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="empAdress != null" >
+        emp_adress = #{empAdress,jdbcType=VARCHAR},
+      </if>
+      <if test="empFamadress != null" >
+        emp_famadress = #{empFamadress,jdbcType=VARCHAR},
+      </if>
+      <if test="empEmecontact != null" >
+        emp_emecontact = #{empEmecontact,jdbcType=VARCHAR},
+      </if>
+
+        emp_emecontacttel = #{empEmecontacttel,jdbcType=VARCHAR},
+
+      <if test="empWorkdate != null" >
+        emp_workdate = #{empWorkdate,jdbcType=VARCHAR},
+      </if>
+      <if test="empState != null" >
+        emp_state = #{empState,jdbcType=VARCHAR},
+      </if>
+      <if test="empEntrydate != null" >
+        emp_entrydate = #{empEntrydate,jdbcType=VARCHAR},
+      </if>
+      <if test="empSepardate != null" >
+        emp_separdate = #{empSepardate,jdbcType=VARCHAR},
+      </if>
+      <if test="empQuitdate != null" >
+        emp_quitdate = #{empQuitdate,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="empNo != null" >
+        emp_no = #{empNo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where emp_id = #{empId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ruoyi.project.employee.domain.EmployeeInfo" >
+    update employee_info
+    set emp_name = #{empName,jdbcType=VARCHAR},
+      emp_sex = #{empSex,jdbcType=CHAR},
+      id_card = #{idCard,jdbcType=VARCHAR},
+      emp_department = #{empDepartment,jdbcType=VARCHAR},
+      emp_job = #{empJob,jdbcType=VARCHAR},
+      emp_level = #{empLevel,jdbcType=VARCHAR},
+      emp_tel = #{empTel,jdbcType=VARCHAR},
+      emp_age = #{empAge,jdbcType=INTEGER},
+      emp_edu = #{empEdu,jdbcType=VARCHAR},
+      major = #{major,jdbcType=VARCHAR},
+      emp_email = #{empEmail,jdbcType=VARCHAR},
+      emp_adress = #{empAdress,jdbcType=VARCHAR},
+      emp_famadress = #{empFamadress,jdbcType=VARCHAR},
+      emp_emecontact = #{empEmecontact,jdbcType=VARCHAR},
+      emp_emecontacttel = #{empEmecontacttel,jdbcType=VARCHAR},
+      emp_workdate = #{empWorkdate,jdbcType=VARCHAR},
+      emp_state = #{empState,jdbcType=VARCHAR},
+      emp_entrydate = #{empEntrydate,jdbcType=VARCHAR},
+      emp_separdate = #{empSepardate,jdbcType=VARCHAR},
+      emp_quitdate = #{empQuitdate,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      emp_no = #{empNo,jdbcType=VARCHAR}
+    where emp_id = #{empId,jdbcType=VARCHAR}
+  </update>
+
+  <!-- 查看员工成本 -->
+  <select id="selectEmpCost" resultType="map" parameterType="com.ruoyi.project.employee.domain.EmployeeInfo" >
+    select e.emp_id AS "empId", e.emp_name AS "empName",
+    e.emp_edu AS "empEdu", (SELECT dept_name FROM sys_dept WHERE dept_id = e.emp_department) AS "empDepartment",
+    (SELECT post_name FROM sys_post WHERE post_id = e.emp_job) AS "empJob", e.emp_level AS "empLevel",
+    c.emp_salary AS "empSalary", c.emp_insurance AS "empInsurance", c.emp_fund AS "empFund",
+    c.subsidies_1 AS "subsidies1", c.subsidies_2 AS "subsidies2",
+    c.subsidies_3 AS "subsidies3", c.subsidies_4 AS "subsidies4",
+    c.subsidies_5 AS "subsidies5", c.update_time AS "updateTime"
+    FROM employee_info e LEFT JOIN emp_cost c ON e.emp_id = c.emp_id
+    <where>
+      <if test="empName != null and empName != ''" >
+        AND e.emp_name LIKE concat('%', #{empName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="empDepartment != null and empDepartment != '' and empDepartment !=0" >
+        AND (e.emp_department = #{empDepartment,jdbcType=VARCHAR} OR
+        e.emp_department IN (
+          SELECT t.dept_id FROM sys_dept t
+          WHERE FIND_IN_SET(#{empDepartment,jdbcType=VARCHAR},ancestors)
+        ))
+      </if>
+      <if test="empEdu != null and empEdu != ''" >
+        AND e.emp_edu = #{empEdu,jdbcType=VARCHAR}
+      </if>
+      AND e.emp_state != '2'
+    </where>
+  </select>
+
+  <!--<select id="selectEmpIdle" resultMap="BaseResultMap" parameterType="com.ruoyi.project.employee.domain.EmployeeInfo">
+    SELECT
+    <include refid="Base_Column_List_dept" />
+    FROM employee_info
+    <where>
+      empIdp_id NOT IN (
+        SELempIdp_id FROM emp_binding WHdelFlagflag = '0'
+      )
+      <if test="empName != null and empName != ''" >
+        AND emp_name LIKE concat('%', #{empName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="empDepartment != null and empDepartment != '' and empDepartment !=0" >
+        AND (emp_department = #{empDepartment,jdbcType=VARCHAR} OR
+        emp_department IN (
+        SELECT t.dept_id FROM sys_dept t
+        WHERE FIND_IN_SET(#{empDepartment,jdbcType=VARCHAR},ancestors)
+        ))
+      </if>
+      <if test="empNo != null and empNo != ''" >
+        AND emp_no LIKE concat('%', #{empNo,jdbcType=VARCHAR},'%')
+      </if>
+      AND emp_state != '2'
+    </where>
+  </select>-->
+
+  <resultMap id="IdleEmpResultMap" type="com.ruoyi.project.employee.domain.EmpIdleTableExp" >
+    <result column="emp_id" property="empId" jdbcType="VARCHAR" />
+    <result column="emp_name" property="empName" jdbcType="VARCHAR" />
+    <result column="emp_sex" property="empSex" jdbcType="CHAR" />
+    <result column="id_card" property="idCard" jdbcType="VARCHAR" />
+    <result column="emp_department" property="empDepartment" jdbcType="VARCHAR" />
+    <result column="emp_job" property="empJob" jdbcType="VARCHAR" />
+    <result column="emp_level" property="empLevel" jdbcType="VARCHAR" />
+    <result column="emp_tel" property="empTel" jdbcType="VARCHAR" />
+    <result column="emp_age" property="empAge" jdbcType="INTEGER" />
+    <result column="emp_edu" property="empEdu" jdbcType="VARCHAR" />
+    <result column="major" property="major" jdbcType="VARCHAR" />
+    <result column="emp_email" property="empEmail" jdbcType="VARCHAR" />
+    <result column="emp_adress" property="empAdress" jdbcType="VARCHAR" />
+    <result column="emp_workdate" property="empWorkdate" jdbcType="VARCHAR" />
+    <result column="emp_state" property="empState" jdbcType="VARCHAR" />
+    <result column="emp_entrydate" property="empEntrydate" jdbcType="VARCHAR" />
+    <result column="emp_separdate" property="empSepardate" jdbcType="VARCHAR" />
+    <result column="emp_quitdate" property="empQuitdate" jdbcType="VARCHAR" />
+    <result column="emp_no" property="empNo" jdbcType="VARCHAR" />
+    <result column="idle_start_date" property="idleStartDate" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectEmpIdle" resultMap="IdleEmpResultMap" parameterType="com.ruoyi.project.employee.domain.EmpIdleTableExp">
+    SELECT
+      e.emp_id, e.emp_name, e.emp_sex, e.id_card,
+      (SELECT dept_name FROM sys_dept WHERE dept_id = e.emp_department) AS emp_department,
+      (SELECT post_name FROM sys_post WHERE post_id = e.emp_job) AS emp_job, e.emp_level,
+      e.emp_tel, e.emp_age, e.emp_edu, e.major, e.emp_email, e.emp_adress, e.emp_famadress,
+      e.emp_workdate, e.emp_state, e.emp_entrydate, e.emp_separdate,e.emp_quitdate, e.emp_no,
+      (
+        CASE WHEN (SELECT MAX(b.enddate) FROM emp_binding b WHERE b.emp_id = e.emp_id) IS NULL THEN e.emp_entrydate
+        ELSE (SELECT MAX(b.enddate) FROM emp_binding b WHERE b.emp_id = e.emp_id) END
+      ) AS idle_start_date
+    FROM employee_info e
+    <where>
+      AND e.emp_id NOT IN (
+        SELECT emp_id FROM emp_binding WHERE del_flag = '0'
+      )
+      <if test="empName != null and empName != ''" >
+        AND e.emp_name LIKE concat('%', #{empName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="empDepartment != null and empDepartment != '' and empDepartment !=0" >
+        AND (e.emp_department = #{empDepartment,jdbcType=VARCHAR} OR
+        e.emp_department IN (
+          SELECT t.dept_id FROM sys_dept t
+          WHERE FIND_IN_SET(#{empDepartment,jdbcType=VARCHAR},ancestors)
+        ))
+      </if>
+      <if test="empEdu != null and empEdu != ''" >
+        AND e.emp_edu = #{empEdu,jdbcType=VARCHAR}
+      </if>
+      AND e.emp_state != '2'
+    </where>
+  </select>
+
+  <!-- 获取表自增长列的id -->
+  <select id="getGeneratedId" parameterType="string" resultType="int">
+    select AUTO_INCREMENT AS id from INFORMATION_SCHEMA.TABLES
+    where TABLE_NAME=#{tableName}
+  </select>
+
+
+  <select id="selectEmpIdleHistory" resultMap="IdleEmpResultMap" parameterType="com.ruoyi.project.employee.domain.EmpIdleTableExp">
+    SELECT e.emp_id, e.emp_name, e.emp_sex, e.id_card,
+    (SELECT dept_name FROM sys_dept WHERE dept_id = e.emp_department) AS emp_department,
+    (SELECT post_name FROM sys_post WHERE post_id = e.emp_job) AS emp_job, e.emp_level,
+    e.emp_tel, e.emp_age, e.emp_edu, e.major, e.emp_email, e.emp_adress, e.emp_famadress,
+    e.emp_workdate, e.emp_state, e.emp_entrydate, e.emp_separdate,e.emp_quitdate, e.emp_no
+    FROM employee_info e
+    <where>
+      AND e.emp_id IN (
+        SELECT DISTINCT(emp_id) FROM emp_idle WHERE del_flag='0'
+      )
+      <if test="empName != null and empName != ''" >
+        AND e.emp_name LIKE concat('%', #{empName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="empDepartment != null and empDepartment != '' and empDepartment !=0" >
+        AND (e.emp_department = #{empDepartment,jdbcType=VARCHAR} OR
+        e.emp_department IN (
+        SELECT t.dept_id FROM sys_dept t
+        WHERE FIND_IN_SET(#{empDepartment,jdbcType=VARCHAR},ancestors)
+        ))
+      </if>
+      <if test="empEdu != null and empEdu != ''" >
+        AND e.emp_edu = #{empEdu,jdbcType=VARCHAR}
+      </if>
+      AND e.emp_state != '2'
+    </where>
+  </select>
+
+  <select id="selectByempId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  SELECT e.emp_id, e.emp_name, e.emp_sex, e.id_card,
+  (SELECT dept_name FROM sys_dept WHERE dept_id = e.emp_department) AS emp_department,
+  (SELECT post_name FROM sys_post WHERE post_id = e.emp_job) AS emp_job, e.emp_level,
+  e.emp_tel, e.emp_age, e.emp_edu, e.major, e.emp_email, e.emp_adress, e.emp_famadress, e.emp_emecontact, e.emp_emecontacttel,
+  e.emp_workdate, e.emp_state, e.emp_entrydate, e.emp_separdate,e.emp_quitdate,e.remark, e.update_time, e.emp_no,
+  (CASE WHEN (p.item_name IS NULL) THEN '闲置资源池' ELSE p.item_name END) AS item_name
+  FROM employee_info e LEFT JOIN emp_binding b ON e.emp_id = b.emp_id AND b.del_flag='0'
+  LEFT JOIN project_info p ON p.item_id = b.item_id
+  where e.emp_id = #{empId,jdbcType=VARCHAR}
+</select>
+</mapper>

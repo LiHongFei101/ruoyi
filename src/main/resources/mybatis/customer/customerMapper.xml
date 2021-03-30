@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.customer.mapper.CustomerMapper">
+
+    <resultMap id="deptResult" type="SysDept">
+        <id     property="deptId"   column="dept_id"     />
+        <result property="parentId" column="parent_id"   />
+        <result property="deptName" column="dept_name"   />
+        <result property="orderNum" column="order_num"   />
+        <result property="leader"   column="leader"      />
+        <result property="status"   column="dept_status" />
+    </resultMap>
+    <resultMap id="RoleResult" type="SysRole">
+        <id     property="roleId"       column="role_id"        />
+        <result property="roleName"     column="role_name"      />
+        <result property="roleKey"      column="role_key"       />
+        <result property="roleSort"     column="role_sort"      />
+        <result property="dataScope"     column="data_scope"    />
+        <result property="status"       column="role_status"    />
+    </resultMap>
+    <!-- 员工信息-->
+    <resultMap id="BaseResultMap" type="com.ruoyi.project.employee.domain.EmployeeInfo" >
+        <id column="emp_id" property="empId" jdbcType="VARCHAR" />
+        <result column="emp_name" property="empName" jdbcType="VARCHAR" />
+        <result column="emp_sex" property="empSex" jdbcType="CHAR" />
+        <result column="id_card" property="idCard" jdbcType="VARCHAR" />
+        <result column="emp_department" property="empDepartment" jdbcType="VARCHAR" />
+        <!--<result column="emp_secdepartment" property="empSecdepartment" jdbcType="VARCHAR" />-->
+        <result column="emp_job" property="empJob" jdbcType="VARCHAR" />
+        <result column="emp_level" property="empLevel" jdbcType="VARCHAR" />
+        <result column="emp_tel" property="empTel" jdbcType="VARCHAR" />
+        <result column="emp_age" property="empAge" jdbcType="INTEGER" />
+        <result column="emp_edu" property="empEdu" jdbcType="VARCHAR" />
+        <result column="emp_salary" property="empSalary" jdbcType="DECIMAL" />
+        <result column="emp_adress" property="empAdress" jdbcType="VARCHAR" />
+        <result column="emp_famadress" property="empFamadress" jdbcType="VARCHAR" />
+        <result column="emp_emecontact" property="empEmecontact" jdbcType="VARCHAR" />
+        <result column="emp_emecontacttel" property="empEmecontacttel" jdbcType="VARCHAR" />
+        <result column="emp_workdate" property="empWorkdate" jdbcType="VARCHAR" />
+        <result column="emp_state" property="empState" jdbcType="VARCHAR" />
+        <result column="emp_entrydate" property="empEntrydate" jdbcType="VARCHAR" />
+        <result column="emp_separdate" property="empSepardate" jdbcType="VARCHAR" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="emp_no" property="empNo" jdbcType="VARCHAR" />
+        <association property="dept"    column="dept_id" javaType="SysDept" resultMap="deptResult" />
+        <association property="post"    column="post_id" javaType="SysPost" resultMap="SysPostResult" />
+    </resultMap>
+    <resultMap type="SysPost" id="SysPostResult">
+        <id     property="postId"        column="post_id"       />
+        <result property="postCode"      column="post_code"     />
+        <result property="postName"      column="post_name"     />
+        <result property="postSort"      column="post_sort"     />
+        <result property="status"        column="status"        />
+        <result property="createBy"      column="create_by"     />
+        <result property="createTime"    column="create_time"   />
+        <result property="updateBy"      column="update_by"     />
+        <result property="updateTime"    column="update_time"   />
+        <result property="remark"        column="remark"        />
+    </resultMap>
+
+    <select id="selectCustomerList" parameterType="Customer" resultType="com.ruoyi.project.customer.domain.Customer">
+        SELECT * from customer_info
+        <where>
+            `del_flag`='0'
+            <if test="customer_name != null and customer_name != ''">
+                AND customer_name like concat('%', #{customer_name,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="customer_adress != null and customer_adress != ''">
+                AND customer_adress like concat('%', #{customer_adress,jdbcType=VARCHAR}, '%')
+            </if>
+        </where>
+    </select>
+
+    <!--新增客户详细信息-->
+    <insert id="insertCustomer" parameterType="Customer" useGeneratedKeys="true" keyProperty="jobId">
+        INSERT INTO customer_info (`customer_id`, `customer_name`, `customer_type`,`customer_tel`, `customer_email`, `customer_adress`,      `del_flag`, `remark`)
+                         VALUES (#{customer_id}, #{customer_name}, #{customer_type},#{customer_tel}, #{customer_email}, #{customer_adress}, #{del_flag}, #{remark});
+    </insert>
+    <!--修改客户详细信息-->
+    <update id="updateCustomer" parameterType="Customer" useGeneratedKeys="true" keyProperty="jobId">
+        UPDATE customer_info SET
+        <if test="customer_id != null and customer_id != ''">`customer_id`=#{customer_id}, </if>
+        <if test="customer_name != null and customer_name != ''">`customer_name`=#{customer_name}, </if>
+        <if test="customer_type != null and customer_type != ''">`customer_type`=#{customer_type}, </if>
+        <if test="customer_tel != null and customer_tel != ''">`customer_tel`=#{customer_tel},</if>
+        <if test="customer_email != null and customer_email != ''">`customer_email`=#{customer_email}, </if>
+        <if test="customer_adress != null and customer_adress != ''"> `customer_adress`=#{customer_adress}, </if>
+        `remark`=#{remark}
+        WHERE `customer_id`=#{customer_id};
+    </update>
+    <!--根据 item_id查询项目详细信息-->
+    <select id="selectCusById" parameterType="String" resultType="com.ruoyi.project.customer.domain.Customer">
+       select * from customer_info where customer_id = #{customer_id}
+    </select>
+    <!--根据 customer_id批量删除客户信息-->
+    <update id="deleteCustomerByIds" parameterType="Integer" >
+        UPDATE customer_info SET
+        `del_flag`='2'
+        WHERE  customer_id in
+        <foreach collection="array" item="customerids" open="(" separator="," close=")">
+            #{customerids}
+        </foreach>
+    </update>
+
+    <!--根据 customer_id查询外包人员级别-->
+    <select id="selectEmpLevelById" parameterType="String" resultType="com.ruoyi.project.project.domain.Itemperlevel">
+      SELECT * from proemplevel_info
+        where customer_id = #{customer_id} and del_flag = '0'
+    </select>
+
+    <!--新增外包人员级别-->
+    <insert id="insertEmpLevel" parameterType="Itemperlevel" useGeneratedKeys="true" keyProperty="jobId">
+      INSERT INTO proemplevel_info (`item_level_id`, `item_id`,`customer_id`, `level_name`,`level_num`, `level_price`, `del_flag`)
+                         VALUES (#{item_level_id},#{item_id}, #{customer_id}, #{level_name},#{level_num}, #{level_price}, #{del_flag});
+    </insert>
+
+    <!--根据 customer_id查询外包人员级别-->
+    <select id="selectLevelById" parameterType="String" resultType="com.ruoyi.project.project.domain.Itemperlevel">
+      SELECT * from proemplevel_info where item_level_id = #{item_level_id}
+    </select>
+    <!--修改外包人员级别信息 -->
+    <update id="updateEmpLevel" parameterType="Itemperlevel" useGeneratedKeys="true" keyProperty="jobId">
+        UPDATE proemplevel_info SET
+        <if test="item_level_id != null and item_level_id != ''">`item_level_id`=#{item_level_id}, </if>
+        <if test="level_name != null and level_name != ''">`level_name`=#{level_name}, </if>
+        <if test="level_num != null and level_num != ''">`level_num`=#{level_num}, </if>
+        <if test="level_price != null and level_price != ''">`level_price`=#{level_price}</if>
+        WHERE `item_level_id`=#{item_level_id};
+    </update>
+
+    <!--批量删除外包人员级别信息 -->
+    <delete id="delEmpLevel" parameterType="Integer">
+        delete from proemplevel_info where item_level_id in
+        <foreach collection="array" item="item_level_ids" open="(" separator="," close=")">
+            #{item_level_ids}
+        </foreach>
+    </delete>
+    <!--根据 customer_id查询项目人员信息-->
+    <select id="selectEmpById" parameterType="String" resultMap="BaseResultMap">
+      SELECT p.*,d.dept_name, d.leader,s.post_name from employee_info p LEFT JOIN emp_binding u ON p.emp_id = u.emp_id
+        LEFT JOIN customer_info a ON a.customer_id = u.customer_id
+        LEFT JOIN sys_dept d on p.emp_department = d.dept_id
+        LEFT JOIN sys_post s on p.emp_job = s.post_id
+        where u.customer_id = #{customer_id} and u.del_flag = '0' and u.emp_type = '2'
+    </select>
+    <!--查询员工是否绑定客户-->
+    <select id="selectIsBindEmpList" parameterType="Itemper" resultType="com.ruoyi.project.project.domain.Itemper">
+      SELECT * from emp_binding
+        where  emp_id = #{empid} and del_flag = '0'
+    </select>
+    <!-- 查询客户是否有人员级别配置   -->
+    <select id="queryLevelBycusid"    parameterType="Integer"  resultType="Integer">
+		SELECT count(1) count FROM proemplevel_info  WHERE customer_id=#{customerid} and `del_flag`='0'
+	</select>
+    <!--根据 customer_id查询合同信息-->
+    <select id="selectContractById" parameterType="String" resultType="com.ruoyi.project.customer.domain.Contract">
+      SELECT * from contract_info
+        where customer_id = #{customer_id} and `del_flag`='0'
+    </select>
+    <!--新增合同信息-->
+    <insert id="insertContract" parameterType="Contract" useGeneratedKeys="true" keyProperty="jobId">
+      INSERT INTO contract_info (`contract_id`, `customer_id`, `item_id`,`contract_name`, `contract_num`, `start_date`,`end_date`,`stage`,`remark`,`del_flag`)
+                         VALUES (#{contract_id}, #{customer_id}, #{item_id},#{contract_name}, #{contract_num},#{start_date},#{end_date},#{stage},#{remark}, #{del_flag});
+    </insert>
+    <!--根据 customer_id查询合同信息-->
+    <select id="selectContractIdById" parameterType="String" resultType="com.ruoyi.project.customer.domain.Contract">
+      SELECT * from contract_info
+        where contract_id = #{contract_id} and `del_flag`='0'
+    </select>
+    <!--修改合同信息 -->
+    <update id="updateContract" parameterType="Contract" useGeneratedKeys="true" keyProperty="jobId">
+        UPDATE contract_info SET
+        <if test="contract_id != null and contract_id != ''">`contract_id`=#{contract_id}, </if>
+        <if test="contract_name != null and contract_name != ''">`contract_name`=#{contract_name}, </if>
+        <if test="contract_num != null and contract_num != ''">`contract_num`=#{contract_num}, </if>
+        <if test="start_date != null and start_date != ''">`start_date`=#{start_date}, </if>
+        <if test="end_date != null and end_date != ''">`end_date`=#{end_date},</if>
+        <if test="stage != null and stage != ''">`stage`=#{stage}, </if>
+        `remark`=#{remark}
+        WHERE (`contract_id`=#{contract_id});
+    </update>
+    <!--根据 contract_id删除合同信息-->
+    <update id="delContract" parameterType="Integer" >
+        UPDATE contract_info SET
+        `del_flag`='2'
+        WHERE  contract_id in
+        <foreach collection="array" item="contract_ids" open="(" separator="," close=")">
+            #{contract_ids}
+        </foreach>
+    </update>
+</mapper>
